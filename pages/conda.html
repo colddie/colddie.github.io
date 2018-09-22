@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/conda.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:18 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>conda &amp; pip</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html" class="current">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>conda &amp; pip</h1>
+</div>
+<h2>为 conda 和 pip 添加镜像</h2>
+<p>由于国内访问 repo.continuum 和 pypi 的速度较慢，用户可自行设置清华镜像，会
+极大提高下载速度（不会提高环境解析速度）。</p>
+<ul>
+<li><p>conda: <a href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">清华镜像</a>，里面还
+包含 pytorch 等第三方源。</p>
+</li>
+<li><p>pip: <a href="https://mirror.tuna.tsinghua.edu.cn/help/pypi/">清华镜像</a></p>
+</li>
+</ul>
+<p>conda 在解析环境时，由于要将所有 channel 扫一遍，在遇到 repo.continuum 时
+会非常慢。根据清华源的文档设置镜像后，可进一步手动修改 <tt>~/.condarc</tt> 屏蔽
+默认的 channel (defaults) 以提高解析速度。</p>
+<div class="codeblock">
+<div class="blocktitle">~/.condarc</div>
+<div class="blockcontent"><pre>
+channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+  - defaults  &lt;&lt; 去掉这一行！
+show_channel_urls: true
+</pre></div></div>
+<h2>conda 包&amp;环境管理器</h2>
+<p>anaconda 中提供的 conda 是包&amp;环境管理器，不只是 python 包管理器。python 包既可以
+使用 conda 安装也可以使用 python 自带的 pip 安装。</p>
+<p>conda 环境管理器允许用户创建多个隔离环境，注意这里的环境与 module 环境管理不同，
+我们所用到的 conda 更多用于管理不同版本的 python 的不同版本的库：env1,env2,&hellip;,
+允许其中每个 env[1-n]中的 numpy、scipy、torch、tensorflow&hellip;版本互不相同，
+只需要环境内部保证版本依赖性兼容即可。</p>
+<p>例如 A,B 两个库都依赖 C，
+但 A 要求 C 的版本不能超过1.0，B 要求 C 的版本超过1.1，这时用户可以按照如下方式设置环境：</p>
+<ul>
+<li><p>env0: B &amp; C-v1.1 &amp; 其他常用库</p>
+</li>
+<li><p>env1: A &amp; C-v1.0 &amp; 其他常用库
+当用户需要使用 A 时切换到环境 env1，想使用 B 时切换到环境 env0。</p>
+</li>
+</ul>
+<p>这里我们简要介绍一下 conda 作为环境管理器的使用方法，网上也有很多的介绍。</p>
+<p>服务器目前 anaconda/3-5.0.0.1 中默认的环境是 base，其中的 tensorflow 版本为1.3.0。
+下面我们演示一个例子：普通用户安装一个版本为 1.5.0 的 tensorflow-gpu。</p>
+<p><b>注意：由于我们系统的版本较旧，使用 pip 安装的 tensorflow 依赖高版本 GLIBC 库，
+从而无法正常使用。此例子只用来说明如何使用 conda。</b></p>
+<p>查看当前已安装的 conda env</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ module add anaconda/3-5.0.0.1
+liuhy@admin:~$ conda info -e # 或者 conda info --env
+</pre></div></div>
+<p>打开 jupyter-console 验证一下当前环境里所用的确实是 tensorflow-gpu 1.3.0，</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ jupyter-console
+Jupyter console 5.2.0
+
+Python 3.6.2 |Continuum Analytics, Inc.| (default, Jul 20 2017, 13:51:32)
+
+In [1]: import tensorflow as tf
+# some warning
+In [2]: tf.__version__
+Out[2]: '1.3.0'
+</pre></div></div>
+<p>使用 <tt>conda create -n &lt;ENVNAME&gt;</tt> 可以创建一个与原环境相隔离的环境，当用户不具有在原来的
+anaconda 中增添一个环境的权限时，这条命令会自动帮用户在 ~/.conda/envs/ 下创建环境。
+如下，我们指定新 env 的名字为 tf15，同时指定其初始包为 python,scipy,jupyter,
+其中指定python的版本为3.6。</p>
+<p>这里注意，conda 是一个完全独立于 python 的包&amp;环境管理器，python 对于 conda 来说
+只是 conda 的一个包，就如同 Linux 把 conda 当成一个包一样，
+scipy、jupyter 对于 conda 来说也都是包&#8201;&mdash;&#8201;-虽然 scipy 对于 python 来说
+也是一个包，而 jupyter 与 python 则是相互独立的。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ module add anaconda/3-5.0.0.1
+liuhy@admin:~$ conda create -n tf15 python=3.6 scipy jupyter
+...
+Fetching package metadata ...
+........
+Solving package specifications: .
+
+Package plan for installation in environment /public/home/liuhy/.conda/envs/tf15:
+...
+</pre></div></div>
+<p>现在再执行 <tt>conda info &ndash;env</tt> ，这个用户所独有的名为 tf15 的 env 已经在列表中</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ conda info --env
+# conda environments:
+#
+tf15                     /public/home/liuhy/.conda/envs/tf15
+base                  *  /public/software/anaconda/3-5.0.0.1
+
+</pre></div></div>
+<p>使用 <tt>source activate &lt;ENVNAME&gt;</tt> 可以加载已安装的 env，而使用 <tt>source deactivate</tt> 
+退出当前 env。在加载某个 env 之后，命令行前缀会加上这一 env 的名字，在当前 env 下，
+所使用的 python，pip 等命令是当前 env 所独有的。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ source activate tf15
+(tf15) liuhy@admin:~$ which pip
+~/.conda/envs/tf15/bin/pip
+(tf15) liuhy@admin:~$ which python
+~/.conda/envs/tf15/bin/python
+</pre></div></div>
+<p>我们可以用当前环境的 pip 安装 tensorflow-gpu 的1.5.0 版，这个版本的预编译版使用 cuda 9.0，
+由于当前环境所在目录就在我的个人目录 <tt>.conda/envs</tt> 下，我已经有当前环境的读写权限，
+因此在使用 pip 时并不需要 <tt>--user</tt> 参数。相信很多用户已经试过，如果在 base 环境下执行
+pip 会遇到 PermissionError 的问题，原因是 base 环境并不属于普通用户，在 base 环境下需要增加
+<tt>--user</tt> 参数。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(tf15) liuhy@admin:~$ pip install tensorflow-gpu==1.5.0
+...
+Successfully installed ...
+</pre></div></div>
+<p>现在打开当前 env 的 jupyter-console 验证一下 tensorflow 的版本:</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(tf15) liuhy@admin:~$ jupyter-console
+Jupyter console 5.2.0
+
+Python 3.6.2 |Continuum Analytics, Inc.| (default, Jul 20 2017, 13:51:32)
+
+In [1]: import tensorflow as tf
+# some warning
+In [2]: tf.__version__
+Out[2]: '1.5.0'
+</pre></div></div>
+<p>最后，使用 <tt>source deactivate</tt> 退出当前 env。顺便，如果你发现自己的某个 env 不想用了
+可以用 <tt>conda env remove -n &lt;ENVNAME&gt;</tt> 来删除这个环境。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(tf15) liuhy@admin:~$ source deactivate
+liuhy@admin:~$ conda env remove -n tf15
+</pre></div></div>
+<h2>常用命令总结</h2>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin ~$ conda create -n &lt;ENVNAME&gt; python=&lt;VER&gt; jupyter
+# 创建环境
+
+liuhy@admin ~$ conda info -e
+# 列出所有可用环境
+
+liuhy@admin ~$ source activate &lt;ENVNAME&gt;
+# 加载相应环境
+
+(ENVNAME)liuhy@admin ~$ pip install &lt;MODULENAME&gt;==&lt;VER&gt;
+# 在相应环境下安装 python module
+# conda 指定版本需要一个 = 号，而 pip 需要两个： ==
+
+(ENVNAME)liuhy@admin ~$ source deactivate
+# 退出当前环境
+
+liuhy@admin ~$ conda env remove -n &lt;ENVNAME&gt;
+</pre></div></div>
+<h2>一些说明</h2>
+<p>我们使用 <tt>conda create -n &lt;ENVNAME&gt;</tt> 可以创建一个环境，但大家注意到上面创建环境的
+同时还指定了一些初始包：python=3.6 scipy jupyter</p>
+<p>如果不加这三个初始包，会发生什么？</p>
+<p>我们看一下不加python这个包会发生什么。</p>
+<p>我们创建一个名为 tmp 的 env，根据默认设定，新环境的所有文件都将放在 <tt>.conda/envs/tmp</tt> 下，
+由于是空的 env，所以不需要联网。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ conda create -n tmp
+</pre></div></div>
+<p>加载当前环境，并看一下用的是哪个 python 和 pip</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ source activate tmp
+(tmp) liuhy@admin:~$ which pip
+/public/software/anaconda/3-5.0.0.1/bin/pip
+(tmp) liuhy@admin:~$ which python
+/public/software/anaconda/3-5.0.0.1/bin/python
+</pre></div></div>
+<p>可以发现，由于没有安装 python 包（重复说明，对于 conda 来说 python 就是一个包，
+就好像对于 Linux 来说，conda 也只是一个包而已)，python,pip 还是原来环境中的 python 和 pip</p>
+<p>这时我们执行 base 环境中的 pip 安装命令，它会尝试安装包到 base 环境中，
+自然会遇到 PermissionError 的问题</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(tmp) liuhy@admin:~$ pip install tensorflow-gpu==1.5.0
+PermissionError:
+</pre></div></div>
+<p>用 conda 装上 python，有了自己独立的 pip，再装 tensorflow-gpu==1.5.0，就可以成功了。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(tmp) liuhy@admin:~$ conda install python=3.6
+(tmp) liuhy@admin:~$ which pip
+~/.conda/envs/tmp/bin/pip
+(tmp) liuhy@admin:~$ pip install tensorflow-gpu==1.5.0
+Successfully installed
+</pre></div></div>
+<p>同理，如果不安装 jupyter 包，那么在这个环境下使用的 jupyter-console, jupyter-notebook
+也将都是原来环境中的 jupyter-console, jupyter-notebook。</p>
+<p>最后提一下：如果使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin:~$ conda create -n &lt;ENVNAME&gt; python=2.7
+</pre></div></div>
+<p>那么你将得到一个内置 python 2.7 的可用环境，注意到原来的 python 是3.6。</p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/conda.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:18 GMT -->
+</html>

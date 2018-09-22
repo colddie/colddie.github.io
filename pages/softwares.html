@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/softwares.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>集群软件</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html" class="current">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>集群软件</h1>
+</div>
+<p>目前我们的集群安装了如下的软件，用户需根据自己的需求进行载入。绝大多数软件都可以使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+module add &lt;module name&gt;
+</pre></div></div>
+<p>进行载入。使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+module help &lt;module name&gt;
+</pre></div></div>
+<p>可以查看对应软件模块的详细信息，包括内嵌软件版本以及可能的冲突等。<b>加粗的版本</b>
+是使用 <tt>module add</tt> 命令不指定版本号时载入的默认版本；用&lsquo;&lsquo;*&rsquo;&rsquo;标出的是登录系统
+后自动载入的版本。</p>
+<p><table border="1">
+<tr>
+<th align=center>软件名称</th>
+<th align=center>版本</th>
+<th align=center>备注</th>
+</tr>
+<tr>
+<td rowspan="12">gcc</td>
+<td>6.1.0*</td>
+<td>系统默认，不含 gfortran </td>
+</tr>
+<tr>
+<td>4.7.4</td>
+<td>不支持 C11</td>
+</tr>
+<tr>
+<td>4.8.5</td>
+<td>---</td>
+</tr>
+<tr>
+<td>5.3.0</td>
+<td>---</td>
+</tr>
+<tr>
+<td>5.5.0</td>
+<td>---</td>
+</tr>
+<tr>
+<td>6.2.0</td>
+<td>---</td>
+</tr>
+<tr>
+<td>6.3.0</td>
+<td>---</td>
+</tr>
+<tr>
+<td>6.4.0</td>
+<td>gcc6 系列最新</td>
+</tr>
+<tr>
+<td>7.1.0</td>
+<td>---</td>
+</tr>
+<tr>
+<td>7.2.0</td>
+<td>---</td>
+</tr>
+<tr>
+<td><b>7.3.0</b></td>
+<td>gcc7 系列最新</td>
+</tr>
+<tr>
+<td>8.1.0</td>
+<td>gcc8 系列最新</td>
+</tr>
+<tr>
+<td rowspan="1">cmake</td>
+<td><b>3.9.4</b></td>
+<td>---</td>
+</tr>
+<tr>
+<td rowspan="1">gdb</td>
+<td><b>7.12</b></td>
+<td>C 程序的默认调试工具</td>
+</tr>
+<tr>
+<td rowspan="2">git</td>
+<td>2.13.3</td>
+<td>---</td>
+</tr>
+<tr>
+<td><b>2.15.1</b></td>
+<td>---</td>
+</tr>
+<tr>
+<td rowspan="1">Valgrind</td>
+<td><b>3.12.0</b></td>
+<td>---</td>
+</tr>
+<tr>
+<td rowspan="5">MATLAB</td>
+<td>R2015b</td>
+<td>---</td>
+</tr>
+<tr>
+<td>R2016b</td>
+<td rowspan="4">北京大学正版软件平台</td>
+</tr>
+<tr>
+<td>R2017a</td>
+</tr>
+<tr>
+<td><b>R2017b</b></td>
+</tr>
+<tr>
+<td>R2018a</td>
+</tr>
+<tr>
+<td rowspan="2">R</td>
+<td><b>3.2.5</b></td>
+<td>---</td>
+</tr>
+<tr>
+<td>3.3.2</td>
+<td>---</td>
+</tr>
+<tr>
+<td rowspan="4">Anaconda</td>
+<td>2</td>
+<td>python 2.7.12</td>
+</tr>
+<tr>
+<td>2-5.0.1</td>
+<td>python 2.7.14</td>
+</tr>
+<tr>
+<td>3</td>
+<td>python 3.5.2</td>
+</tr>
+<tr>
+<td><b>3-5.0.0.1</b></td>
+<td>python 3.6.2</td>
+</tr>
+<tr>
+<td rowspan="2">python</td>
+<td>2.6</td>
+<td>官方已经停止维护</td>
+</tr>
+<tr>
+<td>3.5</td>
+<td>与 Anaconda 冲突</td>
+</tr>
+<tr>
+<td rowspan="1">JAVA/JDK</td>
+<td>1.8.0_91*</td>
+<td>系统工具，非 modules</td>
+</tr>
+<tr>
+<td rowspan="1">Intel</td>
+<td><b>2018.1.163</b></td>
+<td>cluster edition，暂无法在 comput6 上使用。</td>
+</tr>
+<tr>
+<td rowspan="3">OpenMPI</td>
+<td>1.8.5</td>
+<td>提供 mpicc/mpiexec，与其它 MPI 冲突。</td>
+</tr>
+<tr>
+<td>2.0.0</td>
+<td>提供 mpicc/mpiexec，与其它 MPI 冲突。</td>
+</tr>
+<tr>
+<td><b>3.0.0</b></td>
+<td>整合 SLURM，提供 mpicc/mpiexec，与其它 MPI 冲突。</td>
+</tr>
+<tr>
+<td rowspan="3">mpich</td>
+<td><b>3.2</b></td>
+<td rowspan="2">提供 mpicc/mpiexec，与其它 MPI 冲突。</td>
+</tr>
+<tr>
+<td>3.2.1</td>
+</tr>
+<tr>
+<td>3.2.1-pmi</td>
+<td>整合 SLURM，不含 mpiexec，与其它 MPI 冲突。</td>
+</tr>
+<tr>
+<td rowspan="1">PETSc</td>
+<td><b>3.5.4</b></td>
+<td>依赖 mpich/3.2</td>
+</tr>
+<tr>
+<td rowspan="1">SLEPc</td>
+<td><b>3.5.4</b></td>
+<td>使用时必须和 PETSc 版本一致</td>
+</tr>
+<tr>
+<td rowspan="1">fftw</td>
+<td><b>3.3.5</b></td>
+<td>支持单精度和双精度版本，MPI。使用 MPI 功能请载入 mpich/3.2</td>
+</tr>
+<tr>
+<td rowspan="1">Eigen</td>
+<td><b>3.3.1</b></td>
+<td>使用其 MKL 接口时需要在编译指定 MKL 头文件和库文件的位置</td>
+</tr>
+<tr>
+<td rowspan="1">Vim</td>
+<td><b>8.0</b></td>
+<td>Vim 系列最新</td>
+</tr>
+<tr>
+<td rowspan="1">tmux</td>
+<td><b>2.5</b></td>
+<td>---</td>
+</tr>
+</table></p>
+<h2>安装新软件</h2>
+<p>如果你需要的软件不在以上列表中，可联系管理员进行安装。或者参考以下指南</p>
+<ul>
+<li><p><a href="install.html">我如何在工作站上为自己安装软件</a></p>
+</li>
+<li><p><a href="conda.html">conda 入门教程</a></p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/softwares.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:33 GMT -->
+</html>

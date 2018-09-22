@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/faq.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>常见问题</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html" class="current">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>常见问题</h1>
+</div>
+<p>Q：登录服务器时，输入密码时终端无反应。<br />
+A：这是正常现象，请正常输入你的密码然后按下[Enter]登录即可。</p>
+<p>Q：如何在服务器和本地计算机之间传输文件？<br />
+A：可以使用 <tt>scp</tt> 或 WinScp 等工具。<a href="filetransfer.html">了解更多&gt;&gt;</a></p>
+<p>Q：在服务器运行编译好的 C 程序或者 MEX 文件时，会报告&lsquo;GLIBC version 2.14 not found&rsquo;的错误。<br />
+A：请将源码在服务器上重新编译一遍，因为不同环境下编译出来的二进制可执行文件的运行条件是不同的。</p>
+<p>Q：提交任务时，任务显示在&lsquo;PD&rsquo;(Pending)状态，但是有空闲的计算资源存在。<br />
+A：每个用户提交的任务的数量和占用的核数有一定限制，请使用 <tt>squeue</tt> 查看任务
+无法运行的原因。</p>
+<p>Q：我如何才能保存计算过程中控制台中输出的结果？<br />
+A：请使用输出重定向符号&lsquo;&gt;&rsquo;。例如将程序 text 的控制台输出重定向到文件 &lsquo;out.txt&rsquo; 中</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+./test &gt; out.txt
+</pre></div></div>
+<p>如果使用 matslm.rb 提交任务，则只需要指定 -o 选项即可。</p>
+<p>Q：集群的联网情况如何？<br />
+A：集群的所有机器中，只有管理节点 admin 可以直接访问互联网，其余的计算节点需要通过 admin 进行互联网的访问。
+管理节点访问网络的范围仅限于<b>免费地址</b>，能够访问国内绝大多数网址，不能访问某些国际网址（例如 github.com ）。
+由于我们的 IP 是固定的，因此<b>无法在服务器上连接个人的北大网关</b>。请大家尽量不要运行需要网络连接的任务。</p>
+<ul>
+<li><p>在国内绝大多数网络，可以直接登录我们的服务器。</p>
+</li>
+<li><p>从国外登录需要使用国内的 VPN 才能登录，例如北大 VPN。</p>
+</li>
+</ul>
+<p>Q：为什么我在自己的机器上无法登录账号，启动 SSH 连接时显示超时。但是使用别的机器就可以登录？<br />
+A：为了服务器的安全，当同一个设备<b>连续登录失败 2 次以上</b>时，该设备的 IP 将会被封禁 24 小时，无法从
+此 IP 地址登录。遇到这种情况请及时联系管理员解封。另外，配置 <a href="login.html#ssh">SSH 无密码登录</a>是一个好习惯。</p>
+<p>Q：我可以在服务器上安装服务器上没有的软件吗？<br />
+A：可以。需注意的是，绝大多数软件的安装不需要管理员(root)权限，为此，你可能无法像使用你的个人计算机那样
+使用 apt/yum 进行软件的安装。</p>
+<ul>
+<li><p>一般的开源软件可以直接从源码编译安装，一个详细的例子：<a href="install.html#example">从源码安装 FFTW</a></p>
+</li>
+<li><p>安装属于自己的 python 或 R 包可以参考下面的方式：</p>
+<ul>
+<li><p><a href="install.html#python">安装 python 包到个人目录</a></p>
+</li>
+<li><p><a href="conda.html">conda 入门教程</a></p>
+</li>
+</ul>
+
+</li>
+</ul>
+<p>软件安装完毕后，需要根据软件配置自己的环境变量。自行安装的软件无法被别的用户使用。</p>
+<p>Q：如何将自己的作业提交到指定的机器上（例如 comput1）？<br />
+A：在申请任务所需资源时使用 <tt>#SBATCH --nodelist=comput1</tt> 即可，其中 <tt>comput1</tt>
+为计算节点的主机名。如果对应主机正忙仍然需要排队。</p>
+<p>Q：为何在运行任务的时候有时会提示内存不足或显示程序&lsquo;&lsquo;已杀死（Killed）&rsquo;&rsquo;？<br />
+A：作业调度系统为作业分配的内存和 SLURM 脚本中申请的单节点 CPU 核心数成正比，
+如果内存不够请适当增加 <tt>--cpus-per-task</tt> 或 <tt>--tasks-per-node</tt> 参数。</p>
+<p>Q：用 conda 或 pip 下载 python 包很慢怎么办？<br />
+A：请使用清华镜像源。具体方式请到<a href="conda.html">这里</a>查看。</p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/faq.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:33 GMT -->
+</html>

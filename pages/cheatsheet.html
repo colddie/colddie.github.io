@@ -1,0 +1,582 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/cheatsheet.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:21 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>CheatSheet</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html" class="current">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>CheatSheet</h1>
+</div>
+<p>以下是我个人在使用服务器/Linux 发现的一些有用的小玩意。知道这些不会帮助你科研
+什么的，答辩老师也不会因为你会这个而欣赏你，但是至少你会觉得很酷，进而产生
+自己比较厉害的错觉。</p>
+<h2>目录</h2>
+<ul>
+<li><p><a href="cheatsheet.html#vim">使用 VIM</a></p>
+</li>
+<li><p><a href="cheatsheet.html#mex">使用 MEX 文件</a></p>
+</li>
+<li><p><a href="cheatsheet.html#mkl">Intel MKL 编译选项</a></p>
+</li>
+<li><p><a href="cheatsheet.html#term">命令行操作</a></p>
+</li>
+<li><p><a href="cheatsheet.html#userban">禁用用户</a></p>
+</li>
+<li><p><a href="cheatsheet.html#glibc">GLIBC 版本错误</a></p>
+</li>
+</ul>
+<h2>使用 VIM <a name="vim"></a></h2>
+<p>使用 VIM 是一种信仰，用好了它真的会提高很大效率。</p>
+<p>据说好的 VIM 用户绝不和 emacs 用户打架。</p>
+<p><b>本人并不精通 VIM，还要好多东西要学习。</b></p>
+<h3>打开与关闭</h3>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+# 使用 vim 打开文件，如果文件不存在就新建一个
+vim &lt;filename&gt;
+
+# 用 diff 模式打开两个文件，方便比较异同
+vimdiff file1 file2
+
+# 打开 vim 初学者教程（强烈推荐入门用户学习）
+vimtutor
+</pre></div></div>
+<h3>获取帮助</h3>
+<p>功能太多了，看得眼花缭乱。我怎么知道哪一个是我想要的？</p>
+<ul>
+<li><p>内置文档。很多人可能不知道这是个什么东西。打开 VIM 后，输入 <tt>:help</tt> 即可
+打开内置文档。这里面的功能最全，在阅读文档的时候还可以顺便练习一下 VIM 的
+操作。</p>
+</li>
+<li><p>vimtutor。我又一次提到了这东西。对初学者这东西简直是福利啊。在命令行下
+输入 <tt>vimtutor</tt> 即可打开。</p>
+</li>
+<li><p>VIM adventures。有人居然将 VIM 教程做成了游戏。还不快去玩玩。<a href="https://vim-adventures.com/">传送门&gt;&gt;</a></p>
+</li>
+<li><p>Google。好吧，这也是一个不错的选择。但是前提是你得知道怎么搜。千万别相信
+百度和它搜索到的辣鸡玩意儿，百度搜到的个人 Blog 的编写者，可能 99% 都不如笔者。</p>
+</li>
+</ul>
+<h3>普通模式</h3>
+<p>VIM 编辑器有多个模式：普通模式，插入模式，VISUAL 模式。进入 VIM 编辑器后，
+编辑器处于普通模式，在此模式下，VIM 编辑器会将按键解释成命令。</p>
+<ul>
+<li><p><tt>h,j,k,l</tt> 移动光标，分别对应：左，下，右，上。<b>不要总去碰键盘右边的方向键</b>，
+尽量熟悉用 <tt>hjkl</tt> 来移动你的光标。</p>
+</li>
+<li><p><tt>w,b,W,B</tt> 更快地移动光标到下一个词/上一个词。使用大写字母移动得更快。</p>
+</li>
+<li><p><tt>:q</tt> 如果未修改数据，退出</p>
+</li>
+<li><p><tt>:q!</tt> 取消所有修改，退出</p>
+</li>
+<li><p><tt>:wq</tt>, <tt>:x</tt>, <tt>ZZ</tt> 保存并退出，笔者更喜欢用 <tt>ZZ</tt>，因为只要按三下键盘。</p>
+</li>
+<li><p><tt>:qa!</tt> 关闭当前打开的所有文件，退出</p>
+</li>
+<li><p><tt>:&lt;数字&gt;</tt> 直接跳转到指定的行</p>
+</li>
+<li><p><tt>:tabe &lt;文件名&gt;</tt> 新建或打开一个新文件，并以标签形式显示在编辑器上方</p>
+</li>
+<li><p><tt>gt,gT</tt> 切换到下一个/上一个标签</p>
+</li>
+<li><p><tt>x</tt> 删除当前位置字符</p>
+</li>
+<li><p><tt>dd</tt> 删除当前行（实际是复制到了剪贴板处）</p>
+</li>
+<li><p><tt>&lt;数字&gt;dd</tt> 删除指定数目的行数</p>
+</li>
+<li><p><tt>diw</tt> 删除当前光标所在单词</p>
+</li>
+<li><p><tt>d$</tt> 删除当前光标所在位置至行尾的内容</p>
+</li>
+<li><p><tt>yy</tt> 复制当前行</p>
+</li>
+<li><p><tt>&lt;数字&gt;yy</tt> 复制指定数目的行数</p>
+</li>
+<li><p><tt>yw</tt> 复制当前光标所在单词</p>
+</li>
+<li><p><tt>y$</tt> 复制当前光标所在位置至行尾的内容</p>
+</li>
+<li><p><tt>p</tt> 将剪贴板的内容粘贴至当前位置</p>
+</li>
+<li><p><tt>i,a,I,A</tt> 进入插入模式，并将光标放置在 i： 当前字符前，a：当前字符后，
+I: 本行第一个字符前，A：本行最后一个字符后。</p>
+</li>
+<li><p><tt>o,O</tt> 在下方/上方插入空行，并进入插入模式。</p>
+</li>
+<li><p><tt>u,Ctrl-r</tt> 撤销上一步的更改/重做上一步的撤销。</p>
+</li>
+<li><p><tt>Ctrl-Z</tt> 暂时离开 ViM 编辑器，回到 Shell 界面。在 Shell 中使用 <tt>fg</tt> 命令即可返回 VIM</p>
+</li>
+<li><p><tt>Ctrl-a,Ctrl-x</tt> 将光标所在的数字增加/减少 1。注意：考虑进制，若光标所在的
+数字当前为 <tt>07</tt>，则一次 <tt>Ctrl-a</tt> 过后将会变成 <tt>10</tt>（因为 07 是八进制）。</p>
+</li>
+</ul>
+<h3>插入模式</h3>
+<p>在插入模式下，即可插入文本到光标的位置。按下 Esc 键即可返回普通模式。</p>
+<ul>
+<li><p><tt>Ctrl-w</tt> 删除光标前的一个词。这比按 Backspace 更快。</p>
+</li>
+</ul>
+<h3>VISUAL 模式</h3>
+<p>在普通模式按下 v 可以进入 VISUAL 模式，按下 <tt>Ctrl-V</tt> 可以进入 VISUAL BLOCK 模式。
+两个模式下可对文本进行选择的操作。进而可将普通模式的操作只应用在选择的区域上。</p>
+<h3>查找与替换</h3>
+<p>普通模式下，可进行查找和替换。</p>
+<ul>
+<li><p><tt>/foo</tt> 从当前位置向后查找 foo 这个关键词。</p>
+</li>
+<li><p><tt>?foo</tt> 从当前位置向前查找 foo 这个关键词。</p>
+</li>
+<li><p><tt>n,N</tt> 跳转到下一个/上一个匹配查找的位置。</p>
+</li>
+<li><p><tt>%s/foo/bar/</tt> 将每行的第一个 foo 替换为 bar。</p>
+</li>
+<li><p><tt>%s/foo/bar/g</tt> 将所有的 foo 替换为 bar。</p>
+</li>
+<li><p><tt>%s/foo/bar/gc</tt> 将所有的 foo 替换为 bar，并在每次替换之前询问。</p>
+</li>
+</ul>
+<h2>使用 MEX 文件 <a name="mex"></a></h2>
+<p>MEX 文件在 MATLAB &amp; C 混合编程的过程当中占据了重要角色。由于 MATLAB
+不擅长处理循环，因此如果使用 MATLAB 做纯循环效率会很低下。
+用户可以通过将 C 程序封装成 MATLAB 可执行的文件来为 MATLAB 计算加速。</p>
+<p>以下举一个简单的例子来说明 MEX 是如何工作的。
+设想我们要实现这样的一个效果：输入一个矩阵 A，而后计算每个元素的 2 倍，然后返回结果。</p>
+<p>首先，我们准备一下所需的 C 语言代码。</p>
+<div class="codeblock">
+<div class="blocktitle">simple_mult.c</div>
+<div class="blockcontent"><pre>
+<span class="operator">#include "mex.h"</span>
+
+<span class="builtin">void</span> mexFunction(<span class="builtin">int</span> nlhs, mxArray *plhs[], <span class="builtin">int</span> nrhs, const mxArray *prhs[]){
+  <span class="builtin">int</span> i, m, n;
+  <span class="builtin">double</span> *a, *b;
+
+  <span class="statement">if</span> (nrhs != 1){
+    mexErrMsgTxt("Usage: B = simple_mult(A)");
+    <span class="statement">return</span>;
+  }
+
+  m = mxGetM(prhs[0]);
+  n = mxGetN(prhs[0]);
+  a = mxGetPr(prhs[0]);
+
+  plhs[0] = mxCreateDoubleMatrix(m, n, mxREAL);
+  b = mxGetPr(plhs[0]);
+
+  <span class="statement">for</span> (i = 0; i &lt; m * n; ++i)
+    b[i] = 2 * a[i];
+
+}
+</pre></div></div>
+<p>以上代码中有以下几点是 MEX 文件的约定：</p>
+<ul>
+<li><p>必须包含头文件 <tt>mex.h</tt>，这个头文件声明了 MEX 所有的函数原型和宏。</p>
+</li>
+<li><p>作为 MEX 文件执行的主函数，它的函数头必须为例子中的形式。函数名必须为 <tt>mexFunction</tt>；
+返回类型为 <tt>void</tt>；参数有四个，其中 <tt>nlhs</tt> 和 <tt>nrhs</tt> 分别表示返回值数量和参数数量，
+<tt>plhs</tt> 和 <tt>prhs</tt> 分别表示相应数量的 <tt>mxArray</tt> 指针数组。如果函数头编写不正确则 MEX 编译器无法识别。</p>
+</li>
+<li><p>不能直接对 <tt>mxArray*</tt> 类型的数据进行操作，需要用一系列函数将其内部数据暴露出来。</p>
+</li>
+<li><p>MATLAB 中的矩阵存储格式采用 Fortran 方式，将二维矩阵存成一维长向量，
+先存第一列，再存第二列，以此类推。</p>
+</li>
+</ul>
+<p>不同 MATLAB 版本支持的 C 编译器不同。例如 MATLAB R2015b 最高只能支持
+gcc-4.7 的编译器。因此在执行编译之前，请确保正在使用的 gcc 版本被 MATLAB 支持。
+<b>高版本编译器依然可以用，只是会报 warning，我用过高版本的编译器编过几个，貌似
+没什么问题。</b></p>
+<p>进入 MATLAB 命令行模式（可使用命令 <tt>matn</tt>）。在 MATLAB 命令行下，输入</p>
+<div class="infoblock">
+<div class="blocktitle"></div>
+<div class="blockcontent">
+<p>&gt;&gt; mex -setup C</p>
+</div></div>
+<p>接下来使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+&gt;&gt; mex simple_mult.c
+</pre></div></div>
+<p>即可编译 MEX 文件，其中 <tt>simple_mult.c</tt> 为源文件名，必须在当前工作目录之下。</p>
+<p>编译成功后，MATLAB 会生成对应的 MEX 可执行文件。在我们的例子里，
+MATLAB 会生成一个名为 <tt>simple_mult.mexa64</tt> 的文件。使用此 MEX 函数的方法是</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+B = simple_mult(A)
+</pre></div></div>
+<p><b>小提示</b></p>
+<p>Linux 用户可尝试将本地生成的 mexa64 文件上传至服务器，
+Windows/Mac用户则需要在服务器上编译 mex 文件。在Windows/Mac系统下生成的
+mex 文件无法在 Linux 系统下使用。不过，仍然推荐 Linux 用户在服务器上重新编译 mex 文件，
+以防止运行环境变化导致程序无法运行。</p>
+<h2>设置 Intel MKL 编译选项 <a name="mkl"></a></h2>
+<p>使用 Intel MKL 进行计算时，需要使用 gcc/g++ 编译工具，并将 MKL 库链接到你的目标文件上。</p>
+<p>编译所需的命令行较为复杂，推荐使用<a href="https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor/">Intel® Math Kernel Library Link Line Advisor</a>来指导编译和链接。</p>
+<p>MKL Link Line Advisor 工具需要用户指定选项才可正确完成链接命令的生成。各个选项的含义如下：</p>
+<ul>
+<li><p>Select Intel product: <b>Intel MKL 2017</b>，选择这个选项即可。MKL 链接的命令在各个版本中的区别不大。</p>
+</li>
+<li><p>Select OS: 一定要选择 <b>Linux</b>，这是服务器的操作系统。</p>
+</li>
+<li><p>Select usage model of Intel Xeon Phi Coprocessor: 选择 <b>None</b> 即可，我们暂时用不到这个特殊的设定。</p>
+</li>
+<li><p>Select compiler: 根据个人使用的编译器自行选择。例如程序使用 gcc 编译，则此项需要选择 <b>GNU C/C++</b>。</p>
+</li>
+<li><p>Select architecture: 选择 <b>Intel 64</b>，我们的系统是 64 位系统。</p>
+</li>
+<li><p>Select dynamic or static linking: 选择库类型，是静态库还是动态库。一般情况下建议选择动态库 <b>dynamic</b>，极少数情况（例如编译 MATLAB 的 MEX 文件）可能需要静态库 <b>static</b>。</p>
+</li>
+<li><p>Select interface layer: 选择整数类型。在这里我们选 <b>32-bit integer</b>，即 32 位整数。</p>
+</li>
+<li><p>Select threading layer: 选择多线程类型。这里需要注意自己程序的用途，如果希望 MKL 仅仅占用 1 个 CPU 核心进行运算，那么需要选择 <b>Sequential</b>。如果希望 MKL 自动利用线程进行并行运算，那么需要选择 <b>OpenMP threading</b>。</p>
+</li>
+<li><p>Select OpenMP library: 在上一个选项选择 OpenMP threading 之后出现，选择 OpenMP 所使用的库。在这里需要选择编译器对应版本的 OpenMP 库。例如使用 gcc 编译器进行编译，则需要选择 <b>GNU(libgomp)</b>。</p>
+</li>
+<li><p>Select cluster library: 如果没有使用分布式并行计算的库，无需勾选任何选项。</p>
+</li>
+<li><p>Select MPI library: 无需设置。</p>
+</li>
+<li><p>Select the Fortran 95 interfaces: 无需设置。</p>
+</li>
+<li><p>Link with Intel MKL libraries explicity: 建议<b>勾选</b>以查看详细的链接命令。</p>
+</li>
+</ul>
+<p>按照如上设置完毕后，即可在下方的输出中看到链接选项和编译选项。直接复制到 Makefile 中即可。</p>
+<p>例：使用 MKL 的动态库编译程序，使用多线程的库并使用 GNU OpenMP。</p>
+<div class="codeblock">
+<div class="blocktitle">Makefile</div>
+<div class="blockcontent"><pre>
+CC=gcc
+CFLAGS=-m64 -I${MKLROOT}/include
+LDFLAGS=-L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl
+
+.PHONY: default clean
+
+default: main.c
+        ${CC} -o main $&lt; ${LDFLAGS} ${CFLAGS}
+
+clean:
+        rm -rf *.o main
+</pre></div></div>
+<h2>命令行操作 <a name="term"></a></h2>
+<p>很多初学者可能只会在命令行上用方向键/Home/End 来移动光标，这是 ok 的。不过
+当你发现某个很长的命令中间有个词打错了的时候，是选择删掉重新打，还是将光标
+移动到出错处更改，这就是个问题了。</p>
+<ul>
+<li><p>左右方向键：左右移动，每次移动一个字符。</p>
+</li>
+<li><p><tt>Ctrl-f</tt>, <tt>Ctrl-b</tt>：左右移动，效果跟方向键一样，但是不会让你的右手频繁移动。</p>
+</li>
+<li><p>上下方向键：滚动历史曾经执行过的命令。</p>
+</li>
+<li><p><tt>Ctrl-a</tt>, <tt>Ctrl-e</tt>：移动到行首/行尾。这样右手就不用大老远去按 Home/End 了。</p>
+</li>
+<li><p><tt>Alt-f</tt>, <tt>Alt-b</tt>：向右/左移动一个词的位置。</p>
+</li>
+<li><p><tt>Ctrl-w</tt>：删除当前词。（实际是删除到光标左边最近的一个空格）</p>
+</li>
+<li><p><tt>Ctrl-u</tt>：删除到行首。这会少按好多 Backspace。</p>
+</li>
+<li><p><tt>Shift-PgUp</tt>, <tt>Shift-PgDn</tt>：在 terminal 中滚动。</p>
+</li>
+</ul>
+<h2>禁用用户 <a name="userban"></a></h2>
+<p>有时需要禁用服务器某个用户，不让他登录。最好不要用 <tt>userdel -r &lt;name&gt;</tt> 一删
+了之，因为今后可能要重新启用它。</p>
+<p>可以通过更改用户默认 shell 的方式让用户无法取得 shell 控制权，自然无法使用
+服务器。更改用户 shell 的命令是 <tt>chsh</tt>。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+sudo chsh -s /sbin/nologin &lt;username&gt;
+</pre></div></div>
+<p><tt>/sbin/nologin</tt> 是一个特殊的 shell，这个 shell 会显示 This account is
+currently not available 后直接退出，从而“礼貌拒绝登录”。此时，该用户无法从
+tty 或者是使用 ssh 进行登录。</p>
+<p>假如该用户可以访问服务器上的其它用户（例如另一个用户是他的朋友，他只需要
+<b>临时借用</b>他朋友的账号，这个用户不需要是管理员），那么他是可以通过朋友的账号
+拿回自己的 shell 权限的。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+# user1 是被禁用账户，user2 是活动账户
+[user2@server ~]$ su - user1 -s /bin/bash
+Password:                           # &lt;&lt; 输入 user1 的密码
+[user1@server ~]$                   # &lt;&lt; 居然可以登录
+[user1@server ~]$ chsh -s /bin/bash # 用 chsh 拿回自己的默认 shell
+</pre></div></div>
+<p>这里看到，使用 <tt>su</tt> 命令可以对默认 shell 进行重写，这样我们做的工作全白费了。
+使用 <tt>su</tt> 时需要密码，因此禁用 user1 的密码就可以避免这种方式的越权。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+sudo passwd -l user1
+</pre></div></div>
+<p>上面的命令实际上是修改了 <tt>/etc/shadow</tt> 文件的密码字段，使其失效。</p>
+<p>要恢复账号，只需要执行下面两条命令。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+sudo passwd -u &lt;username&gt;          # 解除密码的锁定
+sudo chfn -s /bin/bash &lt;username&gt;  # 还原正常的 shell
+</pre></div></div>
+<p><b>备注</b></p>
+<ul>
+<li><p>使用 <tt>passwd -l</tt> 的原理是禁用用户密码，若用户使用了别的验证方式（例如 ssh
+公钥），由于走的不是密码验证，因此禁用密码无效。</p>
+</li>
+<li><p>不能在远程 ssh 登录的时候复写登录用的 shell。如果能办到的话，很多安全措施
+其实并不安全（例如 git-shell）。</p>
+</li>
+</ul>
+<h2>GLIBC 版本错误 <a name="glibc"></a></h2>
+<p>在旧系统（例如 CentOS 6）上安装一些较新的预编译的库，运行时可能会发生如下
+错误</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+&gt;&gt;&gt; import torch
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "/public/home/liuhy/.conda/envs/mytorch/lib/python3.6/site-packages/torch/__init__.py", line 78, in &lt;module&gt;
+    from torch._C import *
+ImportError: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by /public/home/liuhy/.conda/envs/mytorch/lib/python3.6/site-packages/torch/_C.cpython-36m-x86_64-linux-gnu.so)
+</pre></div></div>
+<p>原因是系统使用的 GLIBC 版本过低，里面的函数版本未达到要求。</p>
+<p>GLIBC 的地位比较特殊，它不像其他的库只需要改动运行时目录就好。这是因为许多系统
+的关键命令，例如 <tt>ls</tt>, <tt>cat</tt>，都依赖这个库。GLIBC 有许多模块，如果配置错误
+导致各个模块的版本不相同，使用 GLIBC 的系统命令就会崩溃，进而整个系统会无法
+使用，因此以管理员身份操作 GLIBC 时会非常危险。</p>
+<p>传统的解决办法是拿到软件的源码然后重新编译一个，然而有很多因素阻止人们这样做：</p>
+<ul>
+<li><p>重新编译需要解决很多依赖问题，且失败率较高，处理起来很费时。</p>
+</li>
+<li><p>软件是闭源的，无法得到源码。</p>
+</li>
+<li><p>软件编译时需要连网，而服务器无法访问某些网络。</p>
+</li>
+</ul>
+<p>下面介绍一种直接修改二进制文件的方式，或许可以解决 GLIBC 的依赖问题。</p>
+<p><b>处理一般的 GLIBC 版本错误是一个很难的问题，这里的方法不能确保一定成功。
+笔者对 Linux 的 ELF 文件的理解也十分有限，不能确保下面所说的一定正确。</b></p>
+<h3>可执行文件依赖查找顺序</h3>
+<p>在执行一个可执行二进制文件之前，程序会将控制权交给一个特定的 loader，让它
+解析程序文件的 header 并决定要载入哪些库。在 64 位 CentOS 6 系统下，
+这个 loader 通常是 <tt>/lib64/ld-linux-x86-64.so.2</tt>。解析完成并加载程序所需的库
+后，控制权回到原来的程序，程序正式开始运行。ld-linux 按照如下顺序查找依赖</p>
+<ul>
+<li><p>ELF 文件的 <tt>DT_RPATH</tt> 字段，通常以 <tt>-Wl,-rpath</tt> 在连接时指定。已过时。
+原因是它的优先级太高，一旦写死在文件里想临时更改并不容易。（不过还是很多
+人在用）在 <tt>DT_RUNPATH</tt> 存在时将会被忽略。</p>
+</li>
+<li><p><tt>LD_LIBRARY_PATH</tt> 中的路径。这是一个被“滥用”的环境变量，不过确实好用。
+<b>备注：当程序有 SUID 的时候这个变量将会被忽略。</b></p>
+</li>
+<li><p>ELF 文件的 <tt>DT_RUNPATH</tt> 字段，以 <tt>-Wl,--enable-new-dtags,-rpath</tt> 指定。
+据说 <tt>DT_RPATH</tt> 是个错误的设计，因此就出了 <tt>DT_RUNPATH</tt>。</p>
+</li>
+<li><p><tt>ld.so.cache</tt> 里的路径。</p>
+</li>
+<li><p>默认路径，例如 <tt>/lib64</tt>, <tt>/usr/lib64</tt> 等。除非程序编译的时候使用了
+<tt>-z nodeflibs</tt>。</p>
+</li>
+</ul>
+<p>因为载入有顺序，同一个库即使被递归地依赖也不会载入两次。如果在一开始就强制载入
+高版本的 GLIBC 库，那么之后遇到的 GLIBC 也自动会变成高版本的，这种办法就
+<b>可能</b>解决问题。</p>
+<h3>查看 ELF 文件的依赖</h3>
+<p><tt>ldd</tt> 命令可以检查 ELF 文件的动态库依赖关系（<tt>ldd</tt> 并不是个二进制程序，它只是
+一个脚本，不信你用文本编辑器打开看一下）。例如</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ ldd /bin/ls
+	linux-vdso.so.1 =&gt;  (0x00007ffcb7dd9000)
+	libselinux.so.1 =&gt; /lib64/libselinux.so.1 (0x00007fce3a13e000)
+	libcap.so.2 =&gt; /lib64/libcap.so.2 (0x00007fce39f39000)
+	libacl.so.1 =&gt; /lib64/libacl.so.1 (0x00007fce39d30000)
+	libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fce39963000)
+	libpcre.so.1 =&gt; /lib64/libpcre.so.1 (0x00007fce39701000)
+	libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00007fce394fd000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fce3a365000)
+	libattr.so.1 =&gt; /lib64/libattr.so.1 (0x00007fce392f8000)
+	libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00007fce390dc000)
+</pre></div></div>
+<p><tt>ldd</tt> 实际上调用的是 <tt>ld-linux-x86-64.so.2</tt>，这个程序根据上文中提到的顺序
+对库进行查找。那么二进制文件如何找到 <tt>ld-linux-x86-64.so.2</tt> 这个 loader 呢？
+这个 loader 的位置在编译的时候已经写死在二进制程序里了，不用找。
+使用 <tt>readelf</tt> 命令可查看写死在 ELF 文件中的信息。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ readelf -d -l /bin/ls        # -d 的作用是查看 dynamic 部分
+                               # -l 的作用是查看 program header 部分
+
+Elf file type is EXEC (Executable file)
+Entry point 0x4043c4
+There are 9 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040
+                 0x00000000000001f8 0x00000000000001f8  R E    8
+  INTERP         0x0000000000000238 0x0000000000400238 0x0000000000400238
+                 0x000000000000001c 0x000000000000001c  R      1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]   # &lt;&lt; 这就是 loader 的指定位置
+
+     (more information ...)
+
+Dynamic section at offset 0x1ada8 contains 27 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libselinux.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcap.so.2]
+ 0x0000000000000001 (NEEDED)             Shared library: [libacl.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x000000000000000c (INIT)               0x402228
+
+ (more information ...)
+</pre></div></div>
+<p>有了 loader，程序的 header，依赖库的名字，程序运行前就能定出来它的依赖。</p>
+<h3>修改依赖</h3>
+<p>有了上面的基础我们大致能猜出需要改些什么。在 ELF 文件加上高优先级的 <tt>RPATH</tt>
+即可（虽然已过时）。修改库依赖的软件推荐使用 <tt>patchelf</tt>。</p>
+<p>先到 <a href="https://nixos.org/patchelf.html">patchelf 官网</a>下载 patchelf，编译安装
+即可（编译并不是很麻烦）。</p>
+<p>几个需要用到的命令写在下面</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+# 修改 rpath
+patchelf --set-rpath RPATH FILENAME
+
+# 修改 interpreter(loader)，仅限 program，一般动态库没有 interp
+patchelf --set-interpreter INTERP FILENAME
+
+# 查看 rpath/loader
+patchelf --print-rpath FILENAME
+patchelf --print-interpreter FILENAME
+</pre></div></div>
+<h3>实际操作</h3>
+<p>以下以 CentOS 6 下安装 pytorch-0.4-cpu 为例。</p>
+<p>首先正常安装 pytorch。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+conda create -n mytorch          # 创建环境
+source activate mytorch
+conda install python=3.6         # 安装包
+conda install pytorch-cpu torchvision-cpu
+</pre></div></div>
+<p>直接 import 会出错</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+&gt;&gt;&gt; import torch
+ImportError: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by /public/home/liuhy/.conda/envs/mytorch/lib/python3.6/site-packages/torch/_C.cpython-36m-x86_64-linux-gnu.so)
+</pre></div></div>
+<p>在这里虽然我们看见是 pytorch 的一个库缺少 GLIBC 的依赖，但是由于 GLIBC 非常
+基础，在程序的最开始就已经载入这个库了。前面我们提到，同名的库只会 load 一次。
+修改此动态库的字段是没用的。</p>
+<p>缺少的库是 GLIBC_2.14，但这个错误只是其中的一个。其他的函数可能需要更高版本的
+GLIBC。因此我们考虑安装 GLIBC_2.17。这是因为 CentOS 7 的预装库的版本就是 2.17。</p>
+<p>到 GLIBC 官网下载 GLIBC 后，编译，安装。编译时建议使用系统自带的 gcc 和 binutils，
+不推荐太新的软件（实际上太新了反而不识别）。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ tar -xJf glibc-2.17.tar.xz
+$ cd glibc-2.17
+$ mkdir build &amp;&amp; cd build
+$ ../configure --prefix=$HOME/glibc    # 注意填写 prefix
+$ make
+$ make install
+</pre></div></div>
+<p>编译过程不怎么顺利，遇到问题我也不懂怎么解决，自求多福吧。如果运气好成功安装
+完了之后，下一步就是让出错的程序用这个版本的 GLIBC。</p>
+<p>调用 pytorch 库的程序是 python，因此修改库的依赖最好直接从 python 本身开始
+（这就是为什么我们需要在虚拟环境下再装一个 python 的原因）。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ which python                        # 看看 python 在哪
+~/.conda/envs/mytorch/bin/python
+
+$ cd ~/.conda/envs/mytorch/bin        # 进入这个路径
+
+$ ldd python                          # 查看依赖
+	linux-vdso.so.1 =&gt;  (0x00007ffcb10de000)
+	libpthread.so.0 =&gt; /lib64/libpthread.so.0 (0x00002af3e5739000)
+	libc.so.6 =&gt; /lib64/libc.so.6 (0x00002af3e5957000)
+	libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00002af3e5ceb000)
+	libutil.so.1 =&gt; /lib64/libutil.so.1 (0x00002af3e5eef000)
+	librt.so.1 =&gt; /lib64/librt.so.1 (0x00002af3e60f3000)
+	libm.so.6 =&gt; /lib64/libm.so.6 (0x00002af3e62fb000)
+	/lib64/ld-linux-x86-64.so.2 (0x000000336d600000)
+
+$ patchelf --print-rpath python
+$ORIGIN/../lib                     # $ORIGIN 表示 python 所在当前目录
+
+$ patchelf --set-interpreter /public/home/liuhy/glibc/ld-linux-x86-64.so.2
+warning: working around a Linux kernel bug by creating a hole of 1835008 bytes in ‘python’  # 出了个 warning，害怕
+
+$ readelf -l python                # 看下 header，确实发生变化。
+  (information ignored ...)
+
+  INTERP         0x000000000055f268 0x000000000055f268 0x000000000055f268
+                 0x0000000000000032 0x0000000000000032  R      0x1
+      [Requesting program interpreter: /public/home/liuhy/glibc/lib/ld-linux-x86-64.so.2]
+
+  (information ignored ...)
+
+</pre></div></div>
+<p>最后重新打开 python 测试 pytorch 是否可以</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+&gt;&gt;&gt; import torch
+&gt;&gt;&gt; torch.__version__
+'0.4.0'                           # 奇迹般地可以！！！
+</pre></div></div>
+<p><b>备注</b></p>
+<ul>
+<li><p>为什么不去修改 RPATH 而去修改 INTERP 呢？这是因为，程序运行所依赖的 GLIBC
+库必须完整配套。python 程序只是依赖 GLIBC 的一部分模块，单独修改这里的 RPATH
+会导致 python 所依赖的其他库仍然到原来的位置寻找 GLIBC，强行执行会出
+Segment Fault。（以上结论是笔者猜想，不一定对。）</p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/cheatsheet.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:22 GMT -->
+</html>

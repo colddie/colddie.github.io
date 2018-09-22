@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/quickstart.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:02 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>快速入门</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html" class="current">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>快速入门</h1>
+</div>
+<p>在你看了工作站的简略介绍之后，或许你已经有兴趣想在工作站中试着运行你自己的程序。</p>
+<h2>获取你的账号</h2>
+<p>我们的工作站只允许已经授权的用户进行登录。在从管理员处获得你的账号名和初始密码后，
+Linux 或 Mac 用户可直接从命令行登录我们的工作站，使用 <tt>ssh</tt> 命令即可</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ ssh username@ip_address
+</pre></div></div>
+<p>请将 <tt>username</tt> 和 <tt>ip_address</tt> 替换为管理员提供的参数。</p>
+<p>成功连接后，服务器会提示你输入密码，此时请输入初始密码。输入密码的时候界面不会有
+任何反应，但是密码已经输入进去了。</p>
+<p>初次登录后，系统会强行让你设置一个新密码，请按照提示进行操作。更改成功后连接会自动
+断开。此时使用新密码重新登录即可。</p>
+<h3>致 Linux 初学者</h3>
+<p>服务器的系统是 Linux，本文档假设用户有一定的 Linux 基础。不熟悉 Linux 基本操作
+的用户（例如查看文件，编辑文本，复制数据等）可以先花一些时间熟悉这些操作，本
+文档除特殊需要以外不再单独讲解 Linux 的操作。</p>
+<h3>致 Windows 用户</h3>
+<p>由于在服务器上的操作大多基于 Linux，如果能在 Windows 下能使用相同或相似的操作
+会给用户带来很大方便。下面提供了几种 Windows 用户的主要使用方式，用户可以自行
+选择。</p>
+<ul>
+<li><p>使用 WSL(Windows Subsystem Linux)。WSL 是新版 Windows 10 的特性，它可使得用户
+在 Windows 系统下运行命令行模式的 Ubuntu 或 OpenSUSE 等子系统。使用 WSL 的用户
+可直接使用文档中的 Linux 部分。强烈推荐对图形界面需求不大的用户使用。具体安装
+方式可以参考微软的<a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">安装 WSL 教程</a>。
+安装时请留意自己的 Windows 版本。此方式的缺点：终端模拟体验不好；图形界面配置
+麻烦。</p>
+</li>
+<li><p>使用虚拟机安装 Linux。如果不想安装 Linux 双系统可以选择使用这种方式。正确配置
+的虚拟机和真正使用 Linux 几乎无差别。虚拟机用户可直接使用文档中的 Linux 部分。
+并可以使用服务器的图形界面。网络上有关虚拟机的教程非常多，在此不一一列举。
+虚拟机软件推荐 Windows 10 自带的 Hyper-V 和 VMWare。此方式的缺点：虚拟机启动
+时间长；完全启动时占用系统资源较多。</p>
+</li>
+<li><p>使用 PuTTY 等 SSH 客户端。Windows 10 以下的用户可以使用这种方式。SSH 客户端
+提供了较完整的 SSH 功能。<a href="login.html">了解更多&gt;&gt;</a></p>
+</li>
+</ul>
+<h2>准备你的程序</h2>
+<p>在成功登录之后，你可以测试你的第一个服务器程序了。不过在这之前，你需要在服务器上
+准备好你的程序。可以临时书写或者是从本地计算机上传。</p>
+<p>假如我在本地编写了一个名为 <tt>hello.c</tt> 的 Hello World 程序，我要将其上传到工作站上，
+那么我将会在本地计算机上使用 <tt>scp</tt> 命令进行远程复制。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ scp hello.c username@ip_address:
+</pre></div></div>
+<p>这个命令将本地当前目录的 <tt>hello.c</tt> 上传到了工作站的 HOME 目录下。复制的过程中需要
+输入我的密码。以上的命令适用于 Linux 或 Mac 系统。有关更详细地在工作站和个人电脑
+之间传输文件的说明可以在<a href="filetransfer.html">这里</a>查看。</p>
+<p><b>小提示</b></p>
+<p>程序所需要的数据也可用 <tt>scp</tt> 命令进行上传。</p>
+<h2>指定运行环境</h2>
+<p>程序源码准备完毕后，你需要为你的程序搭建其所需的运行环境。例如准备相应的库以及
+编译成可执行程序等。不建议将本地编译好的程序直接上传。如果你是 python 或 MATLAB
+用户，则你只需要指定 python 或 MATLAB 的版本就可以了。</p>
+<p>在这里，我上传了一个 C 源码，因此我需要检查我的编译器是否满足需要。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ gcc -v
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/public/software/compiler/gcc/6.2.0/libexec/gcc/x86_64-pc-linux-gnu/6.2.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/public/software/compiler/gcc/6.2.0 --disable-multilib --enable-languages=c,c++,fortran
+Thread model: posix
+gcc version 6.2.0 (GCC)
+</pre></div></div>
+<p>确定了编译器版本之后，我还要确定所需要的库。因为我这里只是一个 Hello World 程序，所以
+暂时用不到特殊的库。不过，运行实际的程序可就不会这么简单了，必须要检查对应的库在
+系统中是否存在。这时候需要使用 environment modules 进行模块的载入。这里推荐当需要的时候再去阅读。<a href="env.html">了解更多&gt;&gt;</a></p>
+<p>对于我现在的情况，只需要执行很简单的一步编译命令即可</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ gcc -o hello hello.c
+</pre></div></div>
+<h2>编写 SLURM 脚本</h2>
+<p>如果你顺利完成了上面的步骤，那么是否可以直接让服务器运行你的程序了呢？答案是<b>不可以的</b>。
+不知你是否曾经注意过登录之后显示的主机名，名为 admin 的主机仅仅为用户提供了登录操作的
+平台，但程序的运行需要交给它背后的计算节点们完成。那么如何告诉工作站来运行我们的程序？
+我们需要使用作业调度系统 SLURM，它给我们提供了若干运行程序的方式，在本章节
+里我们简要介绍最常用的方式：提交 SLURM 作业脚本的批处理方式。</p>
+<p>首先需要编写一个 SLURM 脚本。</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J test              # 作业名是 test</span>
+<span class="comment">#SBATCH -p cpu               # 提交到 cpu 分区</span>
+<span class="comment">#SBATCH -N 1                 # 使用一个节点</span>
+<span class="comment">#SBATCH --cpus-per-task=1    # 每个进程占用一个 cpu 核心</span>
+<span class="comment">#SBATCH -t 5:00              # 任务最大运行时间是 5 分钟</span>
+<span class="comment">#SBATCH -o test.out          # 将屏幕的输出结果保存到当前文件夹的 test.out</span>
+
+./hello                      <span class="comment"># 执行我的 ./hello 程序</span>
+</pre></div></div>
+<p>以上的脚本的第一行为 shebang，它指定了这个脚本的解释器为 bash。每次编写脚本
+都必须写上这一行。之后有 <tt>#</tt> 开头的若干行表示 SLURM 作业的设置区域，它
+告诉工作站运行任务的详细设定：它被提交到 cpu 分区当中，申请 1 个节点的 1 个
+核心，限制任务最大运行时间是五分钟，将标准输出和标准错误放在 <tt>test.out</tt> 中。
+它的主体内容就是在当前目录执行我编译好的程序 <tt>hello</tt>。</p>
+<p>上面的例子是最简单的批处理任务，较为完整的设置请参考以下内容。另外，用户也可
+提交交互式任务来完成计算。</p>
+<ul>
+<li><p><a href="examples.html">一些例子</a></p>
+</li>
+<li><p><a href="interactive.html">提交交互式任务</a></p>
+</li>
+<li><p><a href="batch.html">提交批处理任务</a></p>
+</li>
+<li><p><a href="slurm.html">SLURM 参考</a></p>
+</li>
+</ul>
+<h2>提交任务</h2>
+<p>在提交任务之前，先使用 <tt>sinfo</tt> 查看可用资源情况。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sinfo
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+cpu*         up 7-00:00:00      4   idle comput[1-4]
+gpu          up 7-00:00:00      1   idle comput6
+</pre></div></div>
+<p>我们看到目前的 cpu 分区处于空闲状态(idle)，任务可以提交。</p>
+<p>准备好 SLURM 脚本之后，使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sbatch run.slurm
+</pre></div></div>
+<p>就可以将刚才的任务提交上去，这里 <tt>sbatch</tt> 是提交 SLURM 脚本的命令。
+如果工作站有空闲资源，那么我的程序将会被放在某一个节点的某
+一个核心上运行。我只需要等待我的程序完成即可。</p>
+<p><b>小提示</b></p>
+<p>使用 <tt>sbatch</tt> 时如果指定的参数不当会导致提交失败。使用 <tt>squeue</tt> 命令可以查询
+目前正在运行的任务，通过查询的结果来判断提交是否成功。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sbatch run.slurm  # 提交任务
+Submitted batch job 38                      # 提交成功，任务号是 38
+[liuhy@admin playground]$ squeue            # 检查运行状态，确实在运行
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                38       cpu     test    liuhy  R       0:04      1 comput1
+</pre></div></div>
+<p>在上面的输出中，<tt>sbatch</tt> 返回的信息是 &lsquo;&lsquo;Submitted batch job 38&rsquo;&rsquo;，这表示我的
+任务已经成功提交，任务号是 38。而 <tt>squeue</tt> 显示我提交的任务的具体信息，在这里
+看到我的任务被放到 cpu 分区上运行，占用 1 个节点 <tt>comput1</tt>，状态(ST)是运行
+状态(R)，并且已经运行了 4 秒钟。</p>
+<h2>输出文件</h2>
+<p>当我的程序完成后，我应该到我指定的文件中去寻找程序的输出。
+系统默认会将标准输出文件和标准错误文件复制到调用 <tt>sbatch</tt> 的目录下。默认的
+文件名是 <tt>slurm-&lt;JOBID&gt;.out</tt>，其中 JOBID 是作业号。如果在 SLURM 脚本中使用
+了 <tt>-o</tt> 选项，则这些文件会被复制到用户所指定的目录下。</p>
+<p><b>小提示</b></p>
+<p>这里讲的输出文件只包含程序运行时打印在屏幕上的内容，即标准输出流和标准错误流。
+程序的其他输出（例如 MATLAB 存储的 <tt>.mat</tt> 文件，python 输出的图像）则需要用户
+手动将这些数据存下来。若不手动指定，这些数据将会丢失。</p>
+<p>总结起来，在工作站上进行运算的步骤如下：</p>
+<ul>
+<li><p>登录主节点，准备程序和数据。</p>
+</li>
+<li><p>编写 SLURM 脚本，设置作业属性（例如占用的资源，最长运行时间）。</p>
+</li>
+<li><p>检查可用资源，提交作业脚本，检查任务状态（使用 <tt>squeue</tt> 和 <tt>sinfo</tt>）。</p>
+</li>
+<li><p>等待运行结束，验收结果。</p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:38 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/quickstart.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:02 GMT -->
+</html>

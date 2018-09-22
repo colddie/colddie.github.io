@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/coding.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:22 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>编程技巧</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html" class="current">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>编程技巧</h1>
+</div>
+<h2>C/C++ 代码风格美化<a name="format"></a></h2>
+<div class="infoblock">
+<div class="blockcontent">
+<p>良好的代码风格十分必要 —— 佚名</p>
+</div></div>
+<p>这里的方法只针对 C/C++ 代码。至于MATLAB，由于这货自带编辑器(editor)与集成开发环境(IDE)，
+可以参考官网“<a href="https://cn.mathworks.com/help/matlab/matlab_prog/improve-code-readability.html">提高代码可读性(Improve Code Readability)</a>”。</p>
+<p><b>注：原文是英文版的，想看中文版的需要登录。</b></p>
+<p>我们用到的是大名鼎鼎的 LLVM —— 的一个子工具 —— clang-format.</p>
+<h3>安装</h3>
+<p>Ubuntu 或者类 Debian 系统：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sudo apt install clang-format
+</pre></div></div>
+<p>CentOS 或者类 RHEL 系统：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+# yum install clang
+</pre></div></div>
+<p>Windows 需要访问 <a href="http://llvm.org/builds/">LLVM 官网</a>下载 Windows 安装包(Windows installer)。</p>
+<p><b>注：bicmr 集群主节点已安装 <tt>clang-format</tt>；任何未授权的权限提升(使用sudo)均被视为危险行为！</b></p>
+<h3>使用方法</h3>
+<p>执行 <tt>clang-format -version</tt> 检查安装是否成功：成功则出现版本号；否则请参考上节。</p>
+<p><tt>clang-format</tt> 使用方法为</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+clang-format [-参数] &lt;输入文件&gt;
+
+参数说明:
+
+	-style=LLVM|Google|Chromium|Mozilla|Webkit
+		设定风格；目前只支持这5种风格；默认是LLVM风格
+
+	-i
+		文件替换；如果指定了这个参数则直接替换源文件，否则将美化过的代码打印到标准输出
+
+</pre></div></div>
+<p>其中带方括号的是可选参数，尖括号的是必须参数(Linux命令手册中也是类似的)。</p>
+<p>笔者认为这些不同的风格都大同小异，如果没有硬性规定选自己喜欢的就好。
+由于历史原因笔者最喜欢Webkit风格，即“大括号换行”、“缩进4空格”，
+所以美化位于 <tt>~/Download</tt> 目录下的 <tt>helloWorld.c</tt> 就需要执行</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+clang-format -style=Webkit -i ~/Download/helloWorld.c
+</pre></div></div>
+<p><b>更多资料请参考“<a href="http://clang.llvm.org/docs/ClangFormat.html">官方文档(Clang 4.0 documentation)</a>”.</b></p>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/coding.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:22 GMT -->
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/interactive.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>提交交互式任务</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html" class="current">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>提交交互式任务</h1>
+</div>
+<p>交互式任务是一种特殊的队列任务，在该模式下，用户可以直接登录到计算节点，此后
+所有的操作都在这个节点上进行。这个功能主要是方便用户在服务器上调试程序，
+以便能够实时看到程序的输出。</p>
+<p>我们需要使用 <tt>salloc</tt> 命令来分配交互式任务所需的资源，它的语法为</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ salloc [申请资源]
+</pre></div></div>
+<p>其中，用户需要以选项的方式指定申请的资源，这些选项与 SLURM 脚本中的选项基本
+相同。常用选项为：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+-N &lt;节点数量&gt;
+--cpus-per-task=&lt;单进程 CPU 核心数&gt;
+--gres=gpu:&lt;单节点 GPU 卡数&gt;
+-t &lt;最长运行时间&gt;
+-p &lt;使用的分区&gt;
+--qos=&lt;使用的 QoS&gt;
+</pre></div></div>
+<p>例如，可以使用如下方式申请资源：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ salloc -N 1 --cpus-per-task=4 -t 5:00 -p cpu
+</pre></div></div>
+<p>执行成功后，SLURM 会给你一个新的 Shell，注意此时用户所在节点仍为主节点，需要
+使用 <tt>ssh</tt> 命令手动切换到计算节点。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ salloc -N 1 --cpus-per-task=4 -t 5:00 -p cpu
+salloc: Granted job allocation 39
+salloc: Waiting for resource configuration
+salloc: Nodes comput1 are ready for job
+[liuhy@admin playground]$ ssh comput1     # 这就是 salloc 分配的新 shell
+Last login: Fri Jan 19 10:20:32 2018 from admin
+[liuhy@comput1 ~]$
+</pre></div></div>
+<p>如上所示，执行 <tt>salloc</tt> 后，SLURM 会自动分配作业号并通知哪个节点是可用的。成功
+获取资源后，你会获得一个新的 Shell（Line 5），此时用户可以直接切换到目标节点
+comput1 执行运算任务。</p>
+<p>交互式计算使用完毕后，先使用 <tt>exit</tt> 退出节点，再执行 <tt>exit</tt> 退出 SLURM 分配
+的 Shell，可结束这次交互式任务。SLURM 会提示你交互式任务的资源已经被释放。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@comput1 ~]$ exit                 # 这一步是退出 comput1
+logout
+Connection to comput1 closed.
+[liuhy@admin playground]$ exit          # 这一步是退出 salloc 分配的 shell
+exit
+salloc: Relinquishing job allocation 39 # 退出的同时也释放了资源
+</pre></div></div>
+<p>用户会重新回到 admin 下进行操作。</p>
+<p><b>小提示</b></p>
+<p>如果在执行交互式任务时超出了申请的最大运行时间，SLURM 会在超时 30 秒后强制
+回收已经申请的资源。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@comput1 ~]$ salloc: Job 40 has exceeded its time limit and its allocation has been revoked.
+</pre></div></div>
+<h2>启用 X11</h2>
+<p>交互式模式下可以启动 X11 Forwarding，这为用户的调试提供了更大的方便。为此，
+首先确保你在登录 admin 的时候开启了 X11 Forwarding。然后在切换到计算节点的时候
+指定 <tt>-Y</tt> 选项即可。<b>备注：SLURM 强制使用受信任的 X11 转发，因此 -X 选项不适用</b></p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ ssh comput1 -Y
+</pre></div></div>
+<p>其中 <tt>comput1</tt> 需要替换成实际被分配的节点名。进入交互式计算模式后，可以试着
+打开一些带有图形界面的程序进行测试，例如 firefox 或者 MATLAB 等。</p>
+<p>以上方法适用于 Linux 系统。Mac 和 Windows 系统的使用方法还在编写中。</p>
+<p><b>注意事项</b></p>
+<ul>
+<li><p>如果 <tt>salloc</tt> 命令无响应，可能是目前所剩计算资源小于申请的资源，需要检查
+你的填写参数或等计算任务少的时候再试。</p>
+</li>
+<li><p>原则上 admin 节点只能进行登录，修改文件，编译程序等任务。严禁在 admin 节点上
+直接运行需要大量运算的程序。管理员有权在不经过用户同意的情况下强行中止长时间运
+行在 admin 的大型程序（占用较多 CPU 或者内存的程序）。</p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/interactive.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/gui.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>使用图形界面</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html" class="current">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>使用图形界面</h1>
+</div>
+<p>通常情况下，在集群中我们都在命令行中操作。但是有时我们需要打开某些软件的图形
+界面，此时我们需要借助 <b>X11 转发</b>。</p>
+<p><b>注意：在网络不好的时候请谨慎使用此功能，此时经过 X11 转发的界面操作起来有
+明显卡顿。尽量在校内有线网或信号较好的无线网的环境下使用。</b></p>
+<h2>Linux</h2>
+<p>在 Linux 环境中启用 X11 转发非常简单，只需要在登录时加入 <tt>-X</tt> 参数。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@laptop: $ ssh -X user@server_ip
+</pre></div></div>
+<p>此后登录集群可以直接输入命令开启图形界面的程序。例如</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin ~]$ matlab
+MATLAB is selecting SOFTWARE OPENGL rendering.
+</pre></div></div>
+<p><img src="../img/matlab-lin.png" alt="matlab-lin"></p>
+<h2>MacOS</h2>
+<p>使用 MacOS 系统时需要安装第三方支持 X11 的软件 XQuartz。<a href="https://www.xquartz.org/">官网地址&gt;&gt;</a></p>
+<p>安装完毕后，在登录集群时加入 <tt>-X</tt> 参数。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@laptop: $ ssh -X user@server_ip
+</pre></div></div>
+<p>此后登录集群可以直接输入命令开启图形界面的程序。</p>
+<p><img src="../img/matlab-mac.png" alt="matlab-mac"></p>
+<h2>Windows</h2>
+<h3>使用 MobaXterm</h3>
+<p>推荐使用 MobaXterm 客户端进行连接。<a href="https://mobaxterm.mobatek.net/">官网地址&gt;&gt;</a></p>
+<p>在默认情况下 MobaXterm 会自动打开 X11 的转发，因此只需正常登录然后直接输入
+打开软件的命令即可。</p>
+<p><img src="../img/matlab-win.png" alt="matlab-win"></p>
+<p><b>注：使用 Xshell 系列的用户需要额外下载 Xmanager。</b></p>
+<h3>使用 PuTTY 配合 Xming</h3>
+<p>PuTTY 用户可配合 Xming 软件完成 X11 的转发。</p>
+<p>首先下载 Xming。<a href="https://sourceforge.net/projects/xming/">下载地址&gt;&gt;</a></p>
+<p>安装完成后双击 Xming.exe 打开 Xming 的 Xserver，此时会在系统任务栏的
+右下角看到 Xming 正在运行。</p>
+<p><img src="../img/Xming.png" alt="Xming"></p>
+<p>然后打开 PuTTY 客户端，选择服务器的相应 Session 配置，点击 Load 载入这个配置。
+在左边面板选择 SSH -&gt; X11，在右边勾选 Enable X11 Forwarding。
+最后回到 Session 界面点击保存即可。</p>
+<p><img src="../img/putty-x11.png" alt="putty-x11"></p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/gui.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:18 GMT -->
+</html>

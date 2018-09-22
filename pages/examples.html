@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/examples.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>一些例子</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html" class="current">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>一些例子</h1>
+</div>
+<p>这个页面总结了一些使用 SLURM 运行常见任务的例子。不想阅读冗长的说明书的用户
+可以直接修改这里面的例子然后运行对应的作业。</p>
+<h2>目录</h2>
+<ul>
+<li><p><a href="examples.html#gpu">提交使用 GPU 卡的任务</a></p>
+</li>
+<li><p><a href="examples.html#matlab">提交 MATLAB 任务</a></p>
+</li>
+<li><p><a href="examples.html#mpi">提交 MPI 任务</a></p>
+</li>
+<li><p><a href="examples.html#multitask">在一个任务里运行多个串行程序</a></p>
+</li>
+</ul>
+<h2>我是一个 GPU 用户，如何使用集群的 GPU 卡？<a name="gpu"></a></h2>
+<p>使用 GPU 服务器的过程非常简单，只需要在申请 SLURM 资源的时候指定 GPU 分区并
+载入相应的 GPU 库即可。注意我们的 GPU 节点安装的是 CUDA-9.0，因此对应的库
+必须支持这个版本的 CUDA。</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J gpu-job            # 任务名字是 gpu-job</span>
+<span class="comment">#SBATCH --cpus-per-task=8     # 申请 8 个 cpu 核心，这里防止内存不够必须增加 CPU 核心数</span>
+<span class="comment">#SBATCH -p gpu                # 任务提交到 gpu 分区，必须填写，只有此分区的机器才有 GPU 卡</span>
+<span class="comment">#SBATCH --gres=gpu:1          # 申请 1 块 GPU 卡，必须填写，SLURM 默认是不分配 GPU 的</span>
+<span class="comment">#SBATCH -t 1-00:00:00         # 最长运行时间是 1 天</span>
+
+module add anaconda           <span class="comment"># 载入 anaconda 模块</span>
+
+<span class="builtin">python</span> gpu_task.py            <span class="comment"># 运行 <span class="builtin">python</span> 程序</span>
+</pre></div></div>
+<p><b>小提示</b></p>
+<p>虽然说我们总是讲 GPU 编程，但是几乎所有的程序都需要 CPU 的参与，GPU 的作用其实
+更多在于加速。换句话说，只有 GPU 是无法运行一个完整的程序的。这也就不难理解
+为什么申请 GPU 卡的时候还需要指定 CPU 个数。</p>
+<h2>我是一个 MATLAB 用户，如何使用 SLURM 运行 MATLAB 任务？<a name="matlab"></a></h2>
+<p>除了使用 <tt>matslm.rb</tt> 自动提交以外，我们仍然可以手动编写 SLURM 脚本。</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J test               # 任务名字是 test</span>
+<span class="comment">#SBATCH -N 1                  # 申请 1 个节点</span>
+<span class="comment">#SBATCH --cpus-per-task=4     # 申请 4 个 cpu 核心</span>
+
+module add matlab             <span class="comment"># 添加 MATLAB 模块</span>
+<span class="comment"># 使用 MATLAB 运行当前文件夹中的 Test.m 文件</span>
+matlab -nodesktop -nosplash -nodisplay -r <span class="string">"Test"</span>
+</pre></div></div>
+<p>上述选项中的 <tt>-nodesktop -nosplash -nodisplay</tt> 表示禁用 MATLAB 的图形界面和
+欢迎界面，而 <tt>-r</tt> 选项的含义是<b>执行某个 MATLAB 命令</b>。在 MATLAB 中输入 Test
+正好就是执行 Test.m 这个脚本，这也就不难理解了为什么 <tt>-r</tt> 选项跟的参数没有
+后缀。</p>
+<p><b>MATLAB 与超线程</b></p>
+<p>如果服务器的 CPU 打开了超线程，则 MATLAB <b>不会</b>将所有的逻辑核心占满。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+&gt;&gt; feature('numcores')
+MATLAB detected: 16 physical cores.
+MATLAB detected: 32 logical cores.
+MATLAB was assigned: 32 logical cores by the OS.
+MATLAB is using: 16 logical cores.
+MATLAB is not using all logical cores because hyper-threading is enabled.
+
+ans =
+
+    16
+
+</pre></div></div>
+<p>如上述结果，系统有 16 个物理核 32 个逻辑核，但是 MATLAB 只使用了 16 个核心。
+这是因为超线程技术对 MATLAB 内置多线程函数的加速效果不大。实际测试表明，双核
+单线程和双核超线程在处理矩阵乘法的效率相同。因此，在申请 MATLAB 任务时，由于
+<tt>--cpus-per-task</tt> 所指的是逻辑核心，且 SLURM 优先会分配同一物理核心的不同
+线程，因此可考虑申请两倍的核心数来达到预期的效果。</p>
+<p>如果使用 MATLAB 的 parpool 进行运算，则所有逻辑核心都可以被利用，但是效率未知。
+以上总结的规律不适用于使用 parpool 的情况。</p>
+<h2>我是一个 MPI 用户，如何运行多线程或使用多节点的 MPI 任务？<a name="mpi"></a></h2>
+<p>集群已经安装了两种主流的 MPI 实现：mpich 和 OpenMPI，并且已经和 SLURM 作业调度
+系统整合。用户只需要写对 SLURM 脚本即可方便启动 MPI 程序。<b>注意：不推荐用户
+自行在自己的 HOME 目录安装 MPI，可能会达不到预期的使用效果。</b></p>
+<p>以下我们以 mpich 为例，给出几种常见的 MPI 使用的例子。</p>
+<h3>使用纯 MPI 模式运行多节点任务</h3>
+<p>纯 MPI 模式即程序只使用 MPI 进行并行，每个进程只有一个线程或只开启一个线程。
+为此我们只需要告诉 SLURM 我们的任务是纯 MPI 并指定总进程个数即可。</p>
+<div class="codeblock">
+<div class="blocktitle">run_mpi.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J mpi-test              # 任务名为 mpi-test</span>
+<span class="comment">#SBATCH -p cpu                   # 提交到 cpu 分区</span>
+<span class="comment">#SBATCH -N 2                     # 申请 2 个节点</span>
+<span class="comment">#SBATCH --ntasks-per-node=24     # 每个节点开 24 个进程</span>
+<span class="comment">#SBATCH --cpus-per-task=2        # 每个进程占用 2 个 core</span>
+
+module add mpich/3.2.1-pmi       <span class="comment"># 添加 mpich/3.2.1-pmi 模块</span>
+export OMP_NUM_THREADS=1         <span class="comment"># 设置全局 OpenMP 线程为 1</span>
+srun -n 48 ./test                <span class="comment"># 运行 ./test 程序</span>
+</pre></div></div>
+<p>在上面的脚本中，我们注意到运行 MPI 程序需要额外指定线程数和进程数，具体的方式
+是配合 <tt>--ntasks-per-node</tt> 和 <tt>--cpus-per-task</tt> 参数。即每个节点有多少个
+进程，每个进程有多少个线程。在这里需要注意我们将 <tt>--cpus-per-task</tt> 设置为 2，
+但我们运行纯 MPI 程序。这是因为我们的计算节点均开启超线程(Hyper-Threading，简称
+HT )技术，一个 CPU core
+可以看成是两个逻辑核心。虽然超线程技术可以提供加速，但是把两个 MPI 进程放在
+<b>同一个 core 的不同 HT 上</b>的效率会低于将它们放在<b>两个不同 core 上</b>。因此使用
+上述脚本设置达到的效果是：</p>
+<ul>
+<li><p>每个节点有 24 个 MPI 进程</p>
+</li>
+<li><p>每个 MPI 进程占据了每个物理核的两个 HT</p>
+</li>
+<li><p>每个 MPI 进程只开了一个线程，注意，如果你的程序没有打开 OpenMP 则无需设置
+<tt>OMP_NUM_THREADS</tt> 这个全局变量，否则需要强制将其设置为 1</p>
+</li>
+</ul>
+<p>最后需要注意，我们载入的模块名字是 <tt>mpich/3.2.1-pmi</tt>，这个模块下，启动 MPI
+程序的命令由 MPI 提供的 <tt>mpiexec</tt> 替换成了 SLURM 的命令
+<tt>srun</tt>，这是 MPI 和 SLURM 整合之后的效果。在 <tt>srun</tt> 中指定开 MPI 进程数量
+是 48 个，根据 SLURM 脚本的设置可以计算出：两个节点，每个节点有 24 个 MPI 进程。
+集群也提供使用默认启动器 mpiexec.hydra 的版本，具体用法在稍后给出。用户可
+根据个人习惯选择两种启动器中的任何一个。</p>
+<h3>使用超线程的纯 MPI 程序</h3>
+<p>有时我们需要充分发挥超线程的性能，这时候我们也可考虑将 MPI 程序绑定到每个逻辑
+核上。这使得在相同资源的情况下，我们开的 MPI 进程数量<b>多了一倍</b>。为此只需要
+对上述脚本加以改造：</p>
+<div class="codeblock">
+<div class="blocktitle">run_mpi.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J mpi-test              # 任务名为 mpi-test</span>
+<span class="comment">#SBATCH -p cpu                   # 提交到 cpu 分区</span>
+<span class="comment">#SBATCH -N 2                     # 申请 2 个节点</span>
+<span class="comment">#SBATCH --ntasks-per-node=48     # 每个节点开 48 个进程</span>
+<span class="comment">#SBATCH --cpus-per-task=1        # 每个进程占用 1 个 core</span>
+
+module add mpich/3.2.1-pmi       <span class="comment"># 添加 mpich/3.2.1-pmi 模块</span>
+export OMP_NUM_THREADS=1         <span class="comment"># 设置全局 OpenMP 线程为 1</span>
+srun -n 96 ./test                <span class="comment"># 运行 ./test 程序</span>
+</pre></div></div>
+<p>发生改动的只有 <tt>--ntasks-per-node</tt>，<tt>--cpus-per-task</tt> 和 <tt>srun -n</tt>。用户
+可以准确得知所有进程的分配方式。</p>
+<h3>使用 OpenMP 与 MPI 的混合代码</h3>
+<p>用户可以通过更改 SLURM 脚本的运行参数来运行混合代码。为此只需要告诉 SLURM 调度
+系统我们需要运行多少个 MPI 进程，每个进程开多少线程即可。</p>
+<div class="codeblock">
+<div class="blocktitle">run_hybrid.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J hybrid-test           # 任务名为 hybrid-test</span>
+<span class="comment">#SBATCH -p cpu                   # 提交到 cpu 分区</span>
+<span class="comment">#SBATCH -N 2                     # 申请 2 个节点</span>
+<span class="comment">#SBATCH --ntasks-per-node=12     # 每个节点开 12 个进程</span>
+<span class="comment">#SBATCH --cpus-per-task=4        # 每个进程占用 4 个 core</span>
+
+module add mpich/3.2.1-pmi       <span class="comment"># 添加 mpich/3.2.1-pmi 模块</span>
+export OMP_NUM_THREADS=2         <span class="comment"># 设置全局 OpenMP 线程为 2</span>
+srun -n 24 ./test                <span class="comment"># 运行 ./test 程序</span>
+</pre></div></div>
+<p>需要注意的是 <tt>--cpus-per-task</tt> 的数量和 <tt>OMP_NUM_THREADS</tt> 并不对等，原因还是
+因为超线程。使用 <tt>--cpus-per-task</tt> 参数指定的是逻辑 core 数量。实际上每个
+进程可能用不了这么多。此时设置 <tt>OMP_NUM_THREADS=2</tt>，程序的每个进程会优先占据
+物理核，当物理核都用满的时候再考虑使用超线程的特性在每个核上多开出一个线程。
+因此，上述脚本中也可设置 <tt>OMP_NUM_THREADS=4</tt> 占据全部 CPU 资源。</p>
+<h3>使用默认 MPI 启动器</h3>
+<p>mpich 和 OpenMPI 都支持 <tt>srun</tt> 运行（其中 mpich 需要载入 pmi 后缀的模块），它
+们也支持直接使用原生启动器 <tt>mpiexec</tt>（此时 mpich 需要载入不带 pmi 后缀的模块）。
+两种 MPI 实现的启动器都已经考虑到作业调度系统的整合，当<b>在作业脚本</b>中使用
+<tt>mpiexec</tt> 时，启动器会自动检查作业属性，然后正确启动各个 MPI 进程，无需再显式
+指定节点名，CPU 绑定方式等。</p>
+<div class="codeblock">
+<div class="blocktitle">run_mpi.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J mpi-test              # 任务名为 mpi-test</span>
+<span class="comment">#SBATCH -p cpu                   # 提交到 cpu 分区</span>
+<span class="comment">#SBATCH -N 2                     # 申请 2 个节点</span>
+<span class="comment">#SBATCH --ntasks-per-node=4      # 每个节点开 4 个进程</span>
+<span class="comment">#SBATCH --cpus-per-task=4        # 每个进程占用 4 个 core</span>
+
+module add mpich/3.2.1           <span class="comment"># 添加 mpich/3.2.1 模块，注意，不带 -pmi 后缀</span>
+<span class="comment">#module add openmpi/3.0.0        # OpenMPI 支持两种方式的启动</span>
+export OMP_NUM_THREADS=2         <span class="comment"># 设置全局 OpenMP 线程为 2</span>
+mpiexec ./test                   <span class="comment"># 运行程序</span>
+</pre></div></div>
+<p>注意上述脚本的最后一行，<tt>mpiexec</tt> 后无需跟任何参数。启动器会根据作业调度系统
+的设置自动算出总共开多少进程，要开到哪些节点等，非常方便。</p>
+<h3>选择网络接口 </h3>
+<p>集群安装的两种 MPI 对网络接口的选择略有不同。mpich 会选择 <tt>/etc/hosts</tt> 中
+第一个和主机名对应的地址的所在网络接口，而 OpenMPI 则默认启用除 lo 以外的全部
+网络接口（单节点多线程的任务除外）。由于我们的集群计算节点有两种网络互联，为了
+提升速度必须要指定使用哪一个网段。由于 <tt>srun</tt> 启动不支持网段的选择，所以要选择
+网络接口必须使用原生启动器 <tt>mpiexec</tt>，mpich 用户需要载入不带 pmi 后缀的模块。</p>
+<p>我们的网络设备对应关系为：</p>
+<ul>
+<li><p>eth0：千兆管理网，数据传输速度约 100MB/s</p>
+</li>
+<li><p>eth2：万兆光纤，数据传输速度约 1000MB/s</p>
+</li>
+</ul>
+<p>使用 mpich 时需要指定 <tt>-iface</tt> 参数</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+mpiexec -iface eth2 ./test      # 使用 eth2 这块设备
+</pre></div></div>
+<p>使用 OpenMPI 时要指定 MCA</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+mpiexec --mca btl_tcp_if_include eth2 ./test
+</pre></div></div>
+<p>经测试 OpenMPI 对网络的利用率较高，并且对 Infiniband 支持较好。</p>
+<h3>交互式 MPI 任务</h3>
+<p>交互式 MPI 任务可以通过使用 <tt>salloc</tt> 而后直接在主节点运行 <tt>srun</tt> 的方式运行。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin mpi]$ salloc -N 2 --ntasks-per-node=1 -c 4
+salloc: Granted job allocation 927
+salloc: Waiting for resource configuration
+salloc: Nodes comput[1-2] are ready for job
+[liuhy@admin mpi]$ srun -n 2 ./test     # 直接在主节点运行 srun
+This is process 1 of 2 on host comput2, I have 4 threads.
+This is process 0 of 2 on host comput1, I have 4 threads.
+</pre></div></div>
+<p>注意 <tt>srun</tt> 可自动识别作业参数并正确启动。缺点是如果是基于 mpich 的程序则无法
+选择网络接口。</p>
+<p>如果使用 <tt>mpiexec</tt> 启动，则必须手动指定节点名，每个进程的线程数等。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin mpi]$ OMP_NUM_THREADS=4 mpiexec -n 2 -host comput1,comput2 ./test
+This is process 1 of 2 on host comput2, I have 4 threads.
+This is process 0 of 2 on host comput1, I have 4 threads.
+</pre></div></div>
+<p>此时配置 MPI 启动参数会给用户带来麻烦，但好处是 mpich 程序可以选择网络端口。</p>
+<h2>我要运行很多串行的相互独立程序，如何在一个任务中并行地运行它们？<a name="multitask"></a></h2>
+<p>和<a href="slurm.html#array">作业数组</a>不同，串行的相互独立的程序可在同一个作业脚本中
+同时运行。我们需要这个特性是因为集群同时运行作业的数量有上限，在每个程序只占用
+一个 core 的条件下，将这些程序放在同一个作业脚本中同时运行似乎是更好的选择。
+为此我们需要使用 <tt>srun --multi-prog</tt>。下面是个小例子：</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J multi</span>
+<span class="comment">#SBATCH -N 1</span>
+<span class="comment">#SBATCH -p cpu</span>
+<span class="comment">#SBATCH --ntasks-per-node=5</span>
+<span class="comment">#SBATCH -t 1:00:00</span>
+
+<span class="comment"># 运行 5 个进程，使用多任务并发模式，使用配置文件 sleep.conf</span>
+srun -n 5 --multi-prog sleep.conf
+</pre></div></div>
+<p>其中 <tt>sleep.conf</tt> 的内容如下：</p>
+<div class="codeblock">
+<div class="blocktitle">sleep.conf</div>
+<div class="blockcontent"><pre>
+0-4    sleep    10
+</pre></div></div>
+<p>配置文件的格式为分组书写，一共有 3 列，中间用空格隔开。第一列需要指定子任务 ID，
+任务 ID 从 0 开始记，到子任务数减 1，不可以改成别的数字；第二列是需要执行的
+程序命令；第三列是程序的参数，若没参数可以不填写，参数可以用 <tt>%t</tt> 来表示任务
+号或者 <tt>%o</tt> 表示该任务在该组里的位置。每一行可以同时配置多个子任务，最终要保证所有的
+子任务都有定义。假设总共要运行 5 个子任务，那么</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+<span class="comment"># 合法</span>
+0-4    sleep    10
+
+<span class="comment"># 合法，0,2,4 号任务执行 sleep；1,3 号任务执行 hostname</span>
+0,2,4  sleep    10
+1,3    hostname
+
+<span class="comment"># 非法，没定义 0 号任务的内容</span>
+1-4    sleep    10
+
+
+<span class="comment"># 非法，总共要运行 5 个子任务但定义了 6 个</span>
+0-5    sleep    10
+
+<span class="comment"># 非法，0 号任务重复定义</span>
+0-4    sleep    10
+0      hostname
+</pre></div></div>
+<p>执行这个任务脚本可以发现总共的 sleep 时间还是 10s，这说明这些程序是并行地执行。</p>
+<p><b>说明</b></p>
+<ul>
+<li><p>若单机 core 数量不足，可以指定多节点，这样任务可以分配到不同节点，进一步
+扩大独立子程序的规模。</p>
+</li>
+<li><p><tt>%t</tt> 的含义就是子任务 ID，<tt>%o</tt> 的含义为该子任务在当前组的位置。例如配置
+文件中</p>
+</li>
+</ul>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+0-2    sleep    10
+3-4    hostname
+</pre></div></div>
+<p>则对于 0-2 号子任务，<tt>%t</tt> 和 <tt>%o</tt> 的值都是 0，1，2；而对 3 号子任务，<tt>%t</tt> 的
+值是 3，但 <tt>%o</tt> 的值是 0（由于它是这一组的第一个任务）。</p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/examples.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+</html>

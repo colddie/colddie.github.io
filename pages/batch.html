@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/batch.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>提交批处理任务</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html" class="current">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>提交批处理任务</h1>
+</div>
+<p>在工作站提交批处理任务需要编写 SLURM 脚本，以便明确申请的资源以及所要运行的程序。</p>
+<h2>查看可用资源</h2>
+<p>在提交任务之前，务必检查一下各个节点的状态，例如资源是否充足，当前有多少正在执
+行的任务等。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sinfo
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+cpu*         up 7-00:00:00      1    mix comput2
+cpu*         up 7-00:00:00      1  alloc comput1
+cpu*         up 7-00:00:00      2   idle comput[3-4]
+gpu          up 7-00:00:00      1   idle comput6
+</pre></div></div>
+<p>如上所示，使用 <tt>sinfo</tt> 可粗略查看所有分区的节点信息，注意 &lsquo;&lsquo;STATE&rsquo;&rsquo; 一栏的输出
+若为 &lsquo;&lsquo;idle&rsquo;&rsquo; 表示该节点处于闲置状态，若为 &lsquo;&lsquo;alloc&rsquo;&rsquo; 表示该节点已经没有多余的
+资源了，若为 &lsquo;&lsquo;mix&rsquo;&rsquo; 表示该节点有人在占用，但是仍然有剩余资源。</p>
+<p><b>小提示</b></p>
+<p>对于 gpu 分区的节点 comput6，如果显示 &lsquo;&lsquo;mix&rsquo;&rsquo; 表示部分资源被占用，可能出现 GPU
+卡都被占用但是有空闲 CPU 核心的情况。此时我们需要这个节点更详细的信息。可以使用
+<tt>scontrol show node &lt;节点名&gt;</tt> 命令。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sinfo
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+cpu*         up 7-00:00:00      4   idle comput[1-4]
+gpu          up 7-00:00:00      1    mix comput6
+[liuhy@admin playground]$ scontrol show node comput6
+NodeName=comput6 Arch=x86_64 CoresPerSocket=14
+  CPUAlloc=4 CPUErr=0 CPUTot=56 CPULoad=0.00
+  AvailableFeatures=(null)
+  ActiveFeatures=(null)
+  Gres=gpu:2
+  NodeAddr=comput6 NodeHostName=comput6 Version=17.11
+  OS=Linux 2.6.32-696.18.7.el6.x86_64 #1 SMP Thu Jan 4 17:31:22 UTC 2018
+  RealMemory=128000 AllocMem=8800 FreeMem=105593 Sockets=2 Boards=1
+  State=MIXED ThreadsPerCore=2 TmpDisk=0 Weight=1 Owner=N/A MCS_label=N/A
+  Partitions=gpu
+  BootTime=2018-01-12T12:55:53 SlurmdStartTime=2018-01-20T16:04:26
+  CfgTRES=cpu=56,mem=125G,billing=56,gres/gpu=2
+  AllocTRES=cpu=4,mem=8800M,gres/gpu=2
+  CapWatts=n/a
+  CurrentWatts=0 LowestJoules=0 ConsumedJoules=0
+  ExtSensorsJoules=n/s ExtSensorsWatts=0 ExtSensorsTemp=n/s
+</pre></div></div>
+<p>如上所示，<tt>sinfo</tt> 显示 gpu 分区的 comput6 状态是 &lsquo;&lsquo;mix&rsquo;&rsquo;，但是使用 <tt>scontrol</tt>
+命令查看发现已经占用的资源为 <b>AllocTRES=cpu=4,mem=8800M,gres/gpu=2</b>，即占用
+了 4 个 CPU 核心，8800 MB 内存和 2 块 GPU 卡。GPU 卡已经全部占用，这个节点将
+无法运行需要 GPU 的任务。但仍然可运行纯 CPU 任务。</p>
+<p>此外，管理员还提供了两个有用的命令 <tt>snode</tt> 和 <tt>sjob</tt> 用于查看各个节点的状态
+与集群所有任务的运行情况。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@admin ~]$ snode
+    NODE       CPU      LOAD         MEM       GPU    JOBID
+===========================================================================
+ comput1      6/48      6.00     15/128G       0/0    [938 zhanghaix] [937 zhanghaix]
+ comput2     48/48     31.83    124/128G       0/0    [946 tsen] [935 zhanghaix]
+ comput3     30/48     28.85     78/128G       0/0    [936 zhanghaix]
+ comput4      0/48      0.00      0/128G       0/0
+ comput6      0/56      0.00      0/128G       0/2
+</pre></div></div>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin ~]$ sjob
+             JOBID     USER  ACCOUNT CPUS  GRES NODELIST  TIME_LEFT TIME_LIMIT PRIORITY    STATE REASON
+               946     tsen    wenzw   16 (null  comput2    6:43:39   10:00:00      244  RUNNING None
+               938 zhanghai  dongbin    4 (null  comput1 6-15:03:17 7-00:00:00      100  RUNNING None
+               937 zhanghai  dongbin    2 (null  comput1 6-14:59:11 7-00:00:00      100  RUNNING None
+               936 zhanghai  dongbin   30 (null  comput3 6-14:46:27 7-00:00:00      100  RUNNING None
+               935 zhanghai  dongbin   32 (null  comput2 6-01:43:56 7-00:00:00      100  RUNNING None
+</pre></div></div>
+<h2>编写 SLURM 脚本</h2>
+<p>你需要编写一个 SLURM 脚本来完成任务提交的设置。SLURM 脚本可以在本地编写后上传，
+也可以直接在工作站服务器上编辑。</p>
+<p>一个 SLURM 脚本可设置很多内容，下面的模板列出了常用的选项。</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J test                   # 作业名为 test</span>
+<span class="comment">#SBATCH -o test.out               # 屏幕上的输出文件重定向到 test.out</span>
+<span class="comment">#SBATCH -p gpu                    # 作业提交的分区为 cpu</span>
+<span class="comment">#SBATCH --qos=debug               # 作业使用的 QoS 为 debug</span>
+<span class="comment">#SBATCH -N 1                      # 作业申请 1 个节点</span>
+<span class="comment">#SBATCH --ntasks-per-node=1       # 单节点启动的进程数为 1</span>
+<span class="comment">#SBATCH --cpus-per-task=4         # 单任务使用的 CPU 核心数为 4</span>
+<span class="comment">#SBATCH -t 1:00:00                # 任务运行的最长时间为 1 小时</span>
+<span class="comment">#SBATCH --gres=gpu:1              # 单个节点使用 1 块 GPU 卡</span>
+<span class="comment">#SBATCh -w comput6                # 指定运行作业的节点是 comput6，若不填写系统自动分配节点</span>
+
+<span class="comment"># 设置运行环境</span>
+module add anaconda/3-5.0.0.1     <span class="comment"># 添加 anaconda/3-5.0.0.1 模块</span>
+
+<span class="comment"># 输入要执行的命令，例如 ./hello 或 <span class="builtin">python</span> test.py 等</span>
+<span class="builtin">python</span> test.py                    <span class="comment"># 执行命令</span>
+</pre></div></div>
+<p>其中，第一行是固定的，表示使用 <tt>/bin/bash</tt> 来执行脚本。其余的说明如下</p>
+<ul>
+<li><p>申请时请写对分区，由于不同的分区硬件配置不同。<a href="slurm.html#partition">分区详解&gt;&gt;</a></p>
+</li>
+<li><p>QoS 的含义是 &lsquo;&lsquo;Quality of Service&rsquo;&rsquo;，即服务质量。不同的 QoS 对应的优先度和
+资源最大值不同。<a href="slurm.html#qos">QoS 详解&gt;&gt;</a></p>
+</li>
+<li><p>申请的资源不要超过当前分区的最大值，建议使用 <tt>scontrol</tt> 命令查看分区的剩余
+资源数。确定申请 CPU 核心数量之前，请确认你的程序是否真的需要这些计算资源。如果
+程序的并行程度不高，申请过多的 CPU 核心数会造成资源的浪费（多数 CPU 占用率会较
+低），并且会影响他人使用。</p>
+</li>
+<li><p>无需<b>显式指定申请的内存数量</b>，申请内存的大小和申请 CPU 核心数成正比。如果运行
+程序时遇到内存不够的情况请适量增加 CPU 核心数。使用 GPU 的程序无需指定显存数量。</p>
+</li>
+<li><p>实际在每个节点上分配的 CPU 数量由 <tt>--ntasks-per-node</tt> 和 <tt>--cpus-per-task</tt>
+参数共同决定。默认情况下二者都是 1。一般来讲，<b>多进程</b>的程序需要更改
+<tt>--ntasks-per-node</tt>，<b>多线程</b>的程序需要更改 <tt>--cpus-per-task</tt>。各位用户请根据
+自己需求进行设置。</p>
+</li>
+<li><p>任务最长时间的设置格式是 <tt>DD-HH:MM:SS</tt>，例如一天又 15 小时写作 <tt>1-15:00:00</tt>。
+如果高位为 0 可省略。如果不写任务最长时间，则任务的最长时间默认为对应分区
+(Partition) 的默认时间。</p>
+</li>
+</ul>
+<p>以上的所有 <tt>#SBATCH</tt> 属性均可以不设置，当缺少某属性时，系统将使用默认值。</p>
+<p>请在使用时估计自己任务的开销，适量申请计算资源，避免造成资源的浪费。</p>
+<h3>常见的计算软件/软件库的启动命令</h3>
+<p>以下列出服务器中常见的软件启动命令，可以作为手动编写 SLURM 脚本的参考，也可以
+作为<a href="interactive.html">交互式计算</a>的使用参考。</p>
+<p><b>以命令行模式运行 MATLAB</b></p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ matlab -nodesktop -nosplash -nodisplay
+</pre></div></div>
+<p><b>使用 MATLAB 运行 m 脚本</b></p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ matlab -nodesktop -nosplash -nodisplay -r "MATLAB 脚本名，不带 m 后缀"
+</pre></div></div>
+<p>注意：MATLAB 脚本不能像其他语言（如 python，bash）等使用 shebang 来指定解释器，
+因此执行一个 M 文件需要使用 MATLAB 内置命令。<tt>-r</tt> 参数的含义其实并不是“执行
+一个脚本”，而是因为在 MATLAB 的命令行中，输入命令可以等效于执行同名的脚本，
+因此才使用这种方式。</p>
+<p><b>使用 R 运行 R 脚本</b></p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ Rscript &lt;脚本名&gt;
+</pre></div></div>
+<p><b>使用 python 运行 py 脚本</b></p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ python &lt;脚本名&gt;
+</pre></div></div>
+<h2>提交任务</h2>
+<p>将 SLURM 脚本编写完毕并上传工作站后（或直接在工作站编辑），进入 SLURM 脚本的
+目录，使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sbatch &lt;SLURM 脚本文件名&gt;
+</pre></div></div>
+<p>即可提交任务。</p>
+<p>注意，如果参数设置不当 <tt>sbatch</tt> 命令会提交失败，此时需要检查你的参数并修改成正
+确的版本。用户需要使用 <tt>squeue</tt> 检查作业运行情况，若作业是因为参数不当而没有
+运行，则需要修改 SLURM 脚本。</p>
+<p>例如，执行 <tt>sbatch</tt> 后发现如下内容：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sbatch run.slurm
+sbatch: error: Batch job submission failed: Requested node configuration is not available
+</pre></div></div>
+<p>说明指定的分区内没有所需的资源，检查 SLURM 脚本：</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J test</span>
+<span class="comment">#SBATCH -p cpu</span>
+<span class="comment">#SBATCH --cpus-per-task=4</span>
+<span class="comment">#SBATCH --gres=gpu:2</span>
+<span class="comment">#SBATCH -N 1</span>
+<span class="comment">#SBATCH -t 5:00</span>
+
+nvidia-smi
+<span class="builtin">echo</span> $CUDA_VISIBLE_DEVICES
+hostname
+sleep 60
+</pre></div></div>
+<p>发现分区写成了 cpu，并同时申请了 GPU 卡。但 CPU 分区是没有 GPU 卡的，因此提交
+失败。若提交违反了当前 QoS 的最大限定，任务也会被拒绝。如果违反了目标分区的
+最大限定，任务虽然会成功提交但永远不会运行。</p>
+<p>有时 <tt>sbatch</tt> 命令会显示正常提交，但是任务始终无法运行，此时需要使用 <tt>squeue</tt>
+查看任务排队的详细情况。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sbatch run.slurm
+Submitted batch job 55
+[liuhy@admin playground]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                55       cpu     test    liuhy PD       0:00      1 (PartitionTimeLimit)
+</pre></div></div>
+<p>此时 55 号作业的状态为 PD(Pending)，即“被挂起”，最后一列显示了原因是
+PartitionTimeLimit，即申请的运行时间已经超过了该分区允许运行的最大时间，任务
+永远不会运行。此时需要先使用 <tt>scancel</tt> 命令（详见下面的说明）取消任务，然后
+修改 SLURM 脚本使得参数正确。</p>
+<h2>快速提交 MATLAB 任务</h2>
+<p>除了手动编写 SLURM 脚本之外，我们可以使用管理员编写的脚本一键提交 MATLAB 任务。
+为此你只需要准备好所有的程序文件，然后运行一次命令即可，非常方便。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ matslm.rb [-c &lt;使用 CPU 数&gt;][-t &lt;脚本运行时间&gt;][-o &lt;输出文件名&gt;][-p &lt;分区名&gt;][-q &lt;QoS 名&gt;] MATLAB 脚本
+</pre></div></div>
+<p>此命令的详细用法如下：</p>
+<ul>
+<li><p>-h, --help: 显示本命令的帮助。</p>
+</li>
+<li><p>-c, --cpus: 指定使用 CPU 核心数量，默认为 1，允许设置为 1 到 48（或 56，
+具体情况视计算资源而定）。</p>
+</li>
+<li><p>-t, --walltime: 指定作业运行的时间，格式为 HH:MM:SS，作业运行时间不得超过
+指定 QoS 或分区的最大值。</p>
+</li>
+<li><p>-p, --partition: 指定作业在哪个队列运行，默认为 cpu。</p>
+</li>
+<li><p>-q, --qos: 指定使用哪个 QoS，默认为 normal。</p>
+</li>
+<li><p>-o: 重定向输出文件到某个文件中，此文件中包含输出在 MATLAB 控制台中的所有内容。</p>
+</li>
+<li><p>--tmp-dir: 指定中间文件的存放位置，默认情况下脚本会根据当前时间自动生成一
+个目录用于存储所有中间文件。</p>
+</li>
+</ul>
+<p>一个例子（申请 12 个 CPU 核心和 2 小时的运行时间，脚本名为 test.m）：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ matslm.rb -c 12 -t 2:00:00 test.m
+</pre></div></div>
+<p>程序执行完毕后，产生的标准输出在名为 <tt>SLURM_MATLAB_&lt;提交任务时间&gt;_&lt;脚本名（不带.m后缀）&gt;</tt> 的文件夹中。</p>
+<p><b>注意：m 脚本文件必须在当前目录中。</b></p>
+<h2>查看任务状态</h2>
+<p>作业提交完毕后，可使用 <tt>squeue</tt> 命令查看任务状态。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                55       cpu     test    liuhy PD       0:00      1 (PartitionTimeLimit)
+                54       cpu     test    liuhy  R       0:15      1 comput1
+</pre></div></div>
+<p>如上所示，可显示目前任务号，所在分区，任务状态，已经运行时间，以及运行的节点。
+如果任务处于挂起(PD)状态，则显示任务被挂起的原因。用户可以根据这个原因来判断
+自己的作业脚本是否写对了。</p>
+<p>除此之外，使用 <tt>squeue</tt> 配合不同参数可以过滤显示的内容，以便能看到你感兴趣的
+结果。某些参数可以相互组合。</p>
+<ul>
+<li><p><tt>squeue -l</tt>: 以长列表显示更多信息。 </p>
+</li>
+<li><p><tt>squeue -u username</tt>: 仅显示属于用户 <tt>username</tt> 的任务。</p>
+</li>
+<li><p><tt>squeue -t state</tt>: 仅显示处于 state 状态的任务。</p>
+</li>
+</ul>
+<p>删除任务</p>
+<ul>
+<li><p><tt>scancel jobid</tt>: 删除 <tt>jobid</tt> 的作业。</p>
+</li>
+<li><p><tt>scancel -u username</tt>: 删除 <tt>username</tt> 的全部作业。</p>
+</li>
+<li><p><tt>scancel -s state</tt>: 删除处于 <tt>state</tt> 状态的作业。</p>
+</li>
+</ul>
+<p><b>注意：用户只能删除自己的作业，不能删除别人的作业。</b></p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/batch.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+</html>

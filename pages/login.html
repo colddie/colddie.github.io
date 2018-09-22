@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:02 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>登录到工作站</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html" class="current">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>登录到工作站</h1>
+</div>
+<div class="infoblock">
+<div class="blockcontent">
+<p>使用工作站之前，你必须拥有一个<b>工作站账号</b>才能进行任务提交。申请工作站账号请联系工作站管理员：<br />
+liuhaoyang@pku.edu.cn</p>
+</div></div>
+<h2>使用Linux/Mac OS <a name="unix"></a></h2>
+<p>使用这两个系统的用户推荐用<b>终端</b>远程登录到工作站服务器。</p>
+<ul>
+<li><p>Linux  : CTRL+ALT+T</p>
+</li>
+<li><p>Mac OS : Finder-&gt;应用程序(Applications)-&gt;实用工具(Utilities)-&gt;终端(Terminal)</p>
+</li>
+</ul>
+<p>之后使用如下命令：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ ssh username@ip_address -X
+</pre></div></div>
+<p>&lsquo;$&rsquo;为 Shell 提示符，无需输入。<tt>username</tt> 为你的用户名，<tt>ip_address</tt> 是我们的服务器 IP 地址，<tt>-X</tt> 是开启 X11 Forwarding，此功能用于使用图形界面，如果不需要此功能可以不填写。</p>
+<p>输入你的密码，如果出现以下界面表示登录成功。此后可以在此终端里面进行工作站的操作。</p>
+<p><img src="../img/login.png" alt="CHN" width=720px/> <br /> </p>
+<p><b>注意：输入密码时，终端的输入区域不会显示任何字符，但是密码已经输入进去了。</b></p>
+<p>成功登录后，所在路径为个人的 <tt>Home</tt> 文件夹，绝对路径为 <tt>/public/home/用户名</tt>
+，你可以任意访问和修改个人文件夹下的所有内容。</p>
+<p>想要登出工作站时，执行下面的命令。不要直接关闭终端。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ exit
+</pre></div></div>
+<p>初次登录时，系统会强制你修改密码，请务必设置复杂一点的密码，修改完毕后重新登录。</p>
+<p>如果想要再次修改密码，请使用下面的命令。同样，更改密码时终端输入区域不会显示任何字符。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ passwd
+</pre></div></div>
+<h2>使用Windows <a name="win"></a></h2>
+<p>在 Windows 操作系统中，你需要使用任意一种 ssh 客户端来远程登录到工作站服务器。
+建议使用 <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">PuTTY</a> 客户端。</p>
+<p>安装完毕后，按照如下的方式远程登录工作站（使用方法以 PuTTY 为例）：</p>
+<ul>
+<li><p>打开 PuTTY 客户端。</p>
+</li>
+<li><p>输入IP地址(Host Name)，端口号默认为 22。<br /><img src="../img/ssh-p-1.png" alt="CHN" width=720px/> <br />输入完毕后，建议保存当前的 Session 信息。</p>
+</li>
+<li><p>输入用户名和登录密码。</p>
+</li>
+<li><p>如果出现以下界面表示登录成功，此后可以在此终端里面进行工作站的操作。<br /><img src="../img/ssh-p-2.png" alt="CHN"/></p>
+</li>
+</ul>
+<p>想要登出工作站时，请输入如下语句。不要直接关闭 PuTTY。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ exit
+</pre></div></div>
+<p>初次登录时，系统会强制你修改密码，请务必设置复杂一点的密码，修改完毕后重新登录。</p>
+<p>如果想要再次修改密码，请使用下面的命令。同样，更改密码时终端输入区域不会显示任何字符。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ passwd
+</pre></div></div>
+<h1>配置 SSH <a name="ssh"></a></h1>
+<h2>使用Linux/Mac OS</h2>
+<h3>配置 .ssh/config </h3>
+<p>每次连接服务器都要输入用户名和服务器地址似乎有些麻烦，如果可以记录不同 SSH 配置
+会给使用带来很大方便。在这里我们需要借助 <tt>.ssh/config</tt> 这个文件。</p>
+<p>首次使用 SSH 时，本地计算机中是没有这个文件的，我们必须手动创建它。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+liuhy@laptop:~$ cd ~            # 进入本地用户 HOME 目录
+liuhy@laptop:~$ mkdir -p .ssh   # 创建 .ssh 文件夹，如果已经存在则什么也不做
+liuhy@laptop:~$ chmod 700 .ssh  # 更改权限，这个文件夹的权限必须只对拥有者可读写
+liuhy@laptop:~$ cd .ssh
+liuhy@laptop:.ssh$ touch config # 创建 config 文件
+liuhy@laptop:.ssh$ chmod 600 config # 更改权限，这个文件必须仅对拥有者可读写
+</pre></div></div>
+<p>创建完毕后，在 <tt>.ssh/config</tt> 中添加如下内容：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+Host rule-name
+    HostName xxx.xxx.xxx.xxx
+    User user
+    Port 22
+</pre></div></div>
+<p>以上配置的含义是，配置一个名称为 <tt>rule-name</tt> 的匹配规则，服务器地址是
+<tt>xxx.xxx.xxx.xxx</tt>，使用的服务器用户是 <tt>user</tt>，访问 22 端口。设置的时候需要
+把以上内容替换成真实的信息。其中规则的名称可以随便起。</p>
+<p>成功配置后，假设我的 <tt>rule-name</tt> 设置为 <tt>bicmr</tt>，那我下次登录只需要执行</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+ssh bicmr
+</pre></div></div>
+<p>则 SSH 客户端就会在 <tt>.ssh/config</tt> 文件中匹配对应的规则，而后套用登录参数，
+从而达到省略用户名和 IP 地址的目的。此配置对 OpenSSH 的其他程序也生效。
+例如使用 scp 时也可以用这个配置</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+scp bicmr:a.txt .
+</pre></div></div>
+<p>这会将目标服务器 HOME 目录下的 <tt>a.txt</tt> 复制到当前目录，非常方便。</p>
+<p>如果你有多个服务器，只需要在 <tt>.ssh/config</tt> 文件中用空行将不同规则隔开即可。</p>
+<p><b>几点说明</b></p>
+<ul>
+<li><p>规则名称可以使用通配符 *，例如 <tt>Host *</tt> 表示和任意规则匹配。这种配置的用处
+是为其他不匹配的规则设置默认值。由于匹配是从上而下进行，这条配置一般出现在
+config 文件的末尾。</p>
+</li>
+<li><p>在命令行直接指定的参数会覆盖 <tt>config</tt> 中对应的值。例如，<tt>config</tt> 文件设置了
+<tt>User liuhy</tt>，但在命令行执行 <tt>ssh root@bicmr</tt>，则 <tt>config</tt> 文件中的相应配置
+失效，但其余配置（例如 IP 地址，端口等）依然有效。</p>
+</li>
+</ul>
+<h3>配置无密码登录</h3>
+<p>配置 <tt>.ssh/config</tt> 之后，我们每次使用还是要输入密码。然而我们<b>不能</b>把密码写在 config 文件
+里，而需要使用 SSH 密钥来完成无密码登录。这种无密码授权仅对你自己的个人计算机
+有效，别人是无法登录你的服务器账号的，所以请放心使用。</p>
+<p>首先，请在本机命令行中输入以下语句来生成 SSH 密钥对（如果之前生成过就无需执行
+此步骤，否则可能会覆盖之前生成的密钥）：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ ssh-keygen -t rsa -b 4096
+</pre></div></div>
+<p>其中 <tt>-t rsa</tt> 表示使用 RSA 算法；<tt>-b 4096</tt> 表示加密位数是 4096，位数一般是 2
+的幂次，越大则加密强度越高。生成过程中，系统会询问你 SSH 密钥对的保存位置，以
+及对应的密码等。在这里我们使用默认的保存位置，不对 SSH 密钥设置密码。
+因此只需要连续点击三次 Enter 即可。</p>
+<p>生成好的密钥对会保存在默认目录 <tt>$HOME/.ssh/</tt> 下，文件 <tt>id_rsa</tt> 和 <tt>id_rsa.pub</tt> 
+就是刚刚生成的密钥对。请将 <tt>id_rsa.pub</tt> 文件复制到服务器端（可使用 <tt>scp</tt> 命令），
+复制的过程中需要输入你的密码。</p>
+<p>此外，请保管好 <tt>id_rsa</tt> 文件，不要将其复制给他人。</p>
+<p>最后，登录到服务器端，输入登录密码，进入到 <tt>id_rsa.pub</tt> 文件所在的目录下，输入以下命令：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</pre></div></div>
+<p>至此，SSH 无密码配置已经完成。下次登录或者远程复制时系统不会提示你输入密码。</p>
+<p>建议在配置结束之后确认一下服务器端的文件与文件夹的权限。正确的配置是 <tt>.ssh</tt> 文件夹的权限为 700，即仅所有者拥有完整的权限；<tt>.ssh/authorized_keys</tt> 文件的权限为 600，即仅所有这拥有读取和写入权限。我们的工作站已经自动替你完成了这一配置，不过还是建议所有用户了解一下这个细节。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin ~]$ ls -dl .ssh; ls -l .ssh/authorized_keys
+drwx------ 2 liuhy users 89 Mar 27 13:53 .ssh
+-rw------- 1 liuhy users 2034 Oct 19  2016 .ssh/authorized_keys
+</pre></div></div>
+<h2>使用Windows</h2>
+<p>首先，使用 PuTTYGEN 程序（该程序和 PuTTY 在同一个压缩包内）生成 SSH 密钥。<br /></p>
+<p><img src="../img/ssh-pgen-1.png" alt="CHN" width=720px/></p>
+<p>生成完毕后，请务必点击 Save Private Key 将密钥保存下来，密钥的格式为 ppk，可以不设置密钥的密码。</p>
+<p>对于已经存在的 ppk 密钥文件，可以用这个工具打开并查看该文件的公钥部分（上图中最上面 ssh-rsa 开头的一长串文字）。</p>
+<p>然后，你需要使用密码登录服务器，将上述图中公钥部分粘贴到 <tt>$HOME/.ssh/authorized_keys</tt> 文件的末尾。</p>
+<p>最后你需要完成本地的登录设置。打开 PuTTY 程序，载入你要使用 SSH key 的 Session 进行导入。点击左侧的 SSH -&gt; Auth，在右侧选择刚才存储的 ppk 密钥文件。<br /></p>
+<p><img src="../img/ssh-pgen-2.png" alt="CHN" width=720px/></p>
+<p>保存当前的会话设置，这样可以永久生效。</p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:38 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+</html>

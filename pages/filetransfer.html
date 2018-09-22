@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/filetransfer.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:18 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>在工作站和 PC 间传输文件</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html" class="current">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>在工作站和 PC 间传输文件</h1>
+</div>
+<p>我们经常会将我们本地的一些文件上传到工作站上，或是从工作站下载文件。这些工作用命令行可以轻松完成。</p>
+<p>建议在传输文件之前对要传输的文件进行打包，以便有更高的传输效率。在 Linux 下可以使用 <tt>tar</tt> 工具进行打包。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ tar -cjf archive.tar.bz2 folder1/ folder2/
+</pre></div></div>
+<p>上面的命令是将两个文件夹下的所有文件打包到 <tt>archive.tar.bz2</tt> 文件中，并进行一定压缩。在工作站打包数据建议使用这个命令。</p>
+<p>Windows 用户可以使用 WinRAR 或者 Zip 进行打包。</p>
+<p>在服务器中，相应的解包命令为</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ tar -xjf archive.tar.bz2
+$ unzip archive.zip
+$ unrar e archive.rar
+</pre></div></div>
+<h2>Linux 或 Mac</h2>
+<p>在命令行中可以使用 <tt>scp</tt> 命令进行传输文件。这是依赖于 SSH 的一个命令，如果已经配置了 SSH 无密码
+登录那么每次复制将不必输入密码。否则，每次传输文件都需要输入密码。</p>
+<p>以下命令均在本地计算机中执行。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ scp file username@ip_address:
+$ scp file username@ip_address:Documents/
+</pre></div></div>
+<p>上面的第一条命令即可将 <tt>file</tt> 传输到工作站相应账号的 HOME 文件夹下，如果想要指定目录，可以直接写
+相对于 HOME 文件夹的路径，例如第二条命令。</p>
+<p>如果要使用 <tt>scp</tt> 命令复制文件夹，需要加上 <tt>-r</tt> 参数。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ scp -r folder username@ip_address:
+</pre></div></div>
+<p>从服务器传输文件到本地只需将两个参数的位置调换。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ scp username@ip_address:file .
+</pre></div></div>
+<p>在这里我们使用 <tt>.</tt> 来表示本地的当前路径。</p>
+<h3>将工作站目录挂载到本地</h3>
+<p>如果不想使用 scp 命令，可以利用 <tt>sshfs</tt> 将服务器的 HOME 目录挂载到本地。这并不会消耗你本地的存储空间。 </p>
+<p>首先，使用如下命令安装 sshfs 应用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sudo apt install sshfs
+</pre></div></div>
+<p>其中 <tt>apt</tt> 是 ubuntu/debian 的安装包管理器，如果你在使用其它 Linux 发行版，请使用相应的安装包管理器进行安装。</p>
+<p>安装完毕后，在你喜欢的本地目录下建立挂载点，为了方便，可以选择个人的本地 HOME 文件夹。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ mkdir workstation
+</pre></div></div>
+<p>其中 <tt>workstation</tt> 为挂载点的名称，可以随意填写。</p>
+<p>最后，将服务器端的 HOME 文件夹挂载到本地</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sshfs username@ip_address: workstation
+</pre></div></div>
+<p>其中 <tt>username</tt> 为你用户名，<tt>ip_address</tt>为服务器的地址。上面命令的最后一个 <tt>workstation</tt> 表示将服务器文件夹挂载到刚创建的挂载点 <tt>workstation</tt> 上。使用时请将其替换成你实际创建挂载点的路径。</p>
+<p>挂载成功后，你可以从挂载点处（在本说明中为本地 HOME 文件夹下的 <tt>workstation</tt> 目录）直接访问你的服务器远端的目录，非常方便。</p>
+<p>当你不需要使用服务器文件时，需要将服务器挂载目录卸载。命令为</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ fusermount -u workstation
+</pre></div></div>
+<p>其中 <tt>workstation</tt> 为你事先创建好的挂载点。卸载前请确保本地没有程序在使用远程目录下的文件。</p>
+<h2>Windows </h2>
+<p>使用 WinSCP 图形客户端。<a href="http://winscp.net/eng/docs/lang:chs">下载地址</a></p>
+<ul>
+<li><p>在下图中分别输入服务器IP，用户名，密码。<br /><img src="../img/winscp-1.png" alt="client1" width=720px><br />
+在 WinSCP 中同样可以配置 SSH 无密码登录，点击“高级”即可进行类似设置（需要 ppk 文件：<a href="login.html#ssh">生成方法</a>）。</p>
+</li>
+<li><p>进入传输面板进行操作即可。</p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:38 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/filetransfer.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:04:21 GMT -->
+</html>

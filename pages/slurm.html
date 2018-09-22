@@ -1,0 +1,469 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/slurm.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>SLURM 使用参考</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html" class="current">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>SLURM 使用参考</h1>
+</div>
+<p>我们的工作站使用 SLURM 调度系统来规范程序的运行。SLURM 是优秀的开源作业调度系
+统，和 Torque PBS 相比，SLURM 集成度更高，对 GPU 和 MIC 等加速设备支持更好。
+最完整的文档可访问 <a href="https://slurm.schedmd.com/documentation.html">SLURM 官网</a>。</p>
+<p>此页面记录了本集群有关 SLURM 的配置和一些常用功能，可作为平时使用 SLURM 的
+参考文档。初次使用时可跳过这部分的内容，当遇到不太清楚的概念或想要实现某一具体
+功能时可以在此寻找。</p>
+<h2>目录</h2>
+<ul>
+<li><p><a href="slurm.html#partition">分区(Partition)的含义和集群配置</a></p>
+</li>
+<li><p><a href="slurm.html#qos">QoS(Quality of Service) 的含义和集群配置</a></p>
+</li>
+<li><p><a href="slurm.html#trace">追踪任务</a></p>
+</li>
+<li><p><a href="slurm.html#update">更新任务</a></p>
+</li>
+<li><p><a href="slurm.html#array">使用作业数组</a></p>
+</li>
+<li><p><a href="slurm.html#reason">为什么我的作业没被运行</a></p>
+</li>
+<li><p><a href="slurm.html#security">计算节点访问权限控制</a></p>
+</li>
+<li><p><a href="slurm.html#pbs">致 PBS 用户</a></p>
+</li>
+</ul>
+<h2>分区(Partition)详解<a name="partition"></a></h2>
+<p><b>什么是分区，为什么要指定</b></p>
+<p>不同的节点的特性和硬件属性不同，设置分区可以帮助用户更好确定节点的特点，进而
+选择最适合自己的节点进行运算。此外，如果集群中部分机器是私有的，那么设置分区
+可以使得只有部分用户能在这个分区提交作业。总的来说，分区(Partition)可看做
+一系列节点的集合。</p>
+<p>目前我们只有两个分区</p>
+<p><table border="1">
+<tr>
+<th align=center>分区名</th>
+<th align=center>所含节点</th>
+<th align=center>限制</td>
+<th align=center>详情</th>
+</tr>
+<tr>
+<td>cpu</td>
+<td>comput[1-4]</td>
+<td>默认时限：1 小时；最大时限：7 天</td>
+<td>默认分区，四台 cpu 节点，每台节点有 48 核心，128 GB 内存</td>
+</tr>
+<tr>
+<td>gpu</td>
+<td>comput6</td>
+<td>默认时限：1 小时；最大时限：7 天</td>
+<td>一台 gpu 节点，配备 2 块 Tesla P100，CPU 56 核心，128 GB 内存</td>
+</tr>
+</table></p>
+<h2>QoS(Quality of Service)详解<a name="qos"></a></h2>
+<p><b>什么是 QoS，为什么要指定</b></p>
+<p>和分区不同，QoS 表示服务质量，它更多刻画了作业的属性而非节点的属性。不同任务
+的特性不同，指定 QoS 可以使得资源更好分配。例如，用户若只是想简单调试自己的
+程序，而非大规模地运行，那么这样的作业的特点是“短时间”，“用户对结果的需求
+很迫切”。为这样的作业设计 QoS 是非常有必要的。</p>
+<p>目前我们设计了两种 QoS，用户可根据需求自行选择。若不加指定，normal 为所有用户
+的默认 QoS。</p>
+<p><table border="1">
+<tr>
+<th align=center>QoS 名称</th>
+<th aligh=center>优先级</th>
+<th align=center>资源限制</th>
+<th align=center>最大运行时间</td>
+<th align=center>最大作业数</th>
+<th align=center>最大提交数</th>
+</tr>
+<tr>
+<td>normal</td>
+<td>10</td>
+<td>每个用户 144 CPU 核心，2 块 GPU 卡</td>
+<td>不限</td>
+<td>20</td>
+<td>30</td>
+</tr>
+<tr>
+<td>debug</td>
+<td>1000</td>
+<td>每个用户 48 CPU 核心，1 块 GPU 卡</td>
+<td>3 小时</td>
+<td>2</td>
+<td>4</td>
+</tr>
+</table>
+注意：QoS 和 Partition 同时指定最大运行时间时，以二者限制最严格的为准。例如，
+使用 debug QoS 并提交到 cpu 分区中，则最长运行时间为 3 小时。使用 normal QoS
+并提交到 cpu 分区中，则最长运行时间为 7 天。</p>
+<p>可以看到 debug 的 QoS 优先级高，但对每个用户的可用资源也相应变少。</p>
+<h2>追踪任务<a name="trace"></a></h2>
+<p>SLURM 提供了丰富的追踪任务的命令，例如 <tt>scontrol</tt>，<tt>sacct</tt> 等。这些
+命令有助于查看正在运行或已完成的任务状态。当用户认为任务异常时，可使用这些
+工具来追踪任务的信息。</p>
+<p>对于正在运行或排队的任务，可以使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ scontrol show job JOBID
+</pre></div></div>
+<p>其中 JOBID 是正在运行的作业 ID，如果忘记 ID 可以使用 <tt>squeue -u USERNAME</tt> 来
+查看目前处于运行中的作业。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+               140       cpu     test    liuhy  R       0:01      1 comput1
+[liuhy@admin playground]$ scontrol show job 140
+JobId=140 JobName=test
+   UserId=liuhy(502) GroupId=users(100) MCS_label=N/A
+   Priority=283 Nice=0 Account=root QOS=normal
+   ... (more information) ...
+</pre></div></div>
+<p><tt>scontrol</tt> 命令输出的信息非常多，在这里不一一列举。</p>
+<p>作业完成后，需要用 <tt>sacct</tt> 命令来查看历史作业。默认情况下，用户仅能查看属于
+自己的历史作业。直接使用 <tt>sacct</tt> 命令会输出从当天 00:00:00 起到现在的全部作业</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sacct
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- --------
+104                bash        gpu       root          1  COMPLETED      0:0
+104.extern       extern                  root          1  COMPLETED      0:0
+105                bash        cpu       root          1  COMPLETED      0:0
+105.extern       extern                  root          1  COMPLETED      0:0
+108                bash        cpu       root         48  COMPLETED      0:0
+108.extern       extern                  root         48  COMPLETED      0:0
+126                bash        cpu       root          4  COMPLETED      0:0
+126.extern       extern                  root          4  COMPLETED      0:0
+140                test        cpu       root         12  COMPLETED      0:0
+140.batch         batch                  root         12  COMPLETED      0:0
+140.extern       extern                  root         12  COMPLETED      0:0
+141                test        cpu       root         12 CANCELLED+      0:0
+141.batch         batch                  root         12  CANCELLED     0:15
+141.extern       extern                  root         12  COMPLETED      0:0
+142               lllll        cpu       root          1     FAILED      2:0
+142.extern       extern                  root          1  COMPLETED      0:0
+142.0             lllll                  root          1     FAILED      2:0
+</pre></div></div>
+<p>如果使用</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sacct -S MMDD
+</pre></div></div>
+<p>则会输出从 MM 月 DD 日起的所有历史作业。</p>
+<p>默认情况会输出作业 ID，作业名，分区，账户，分配的 CPU，任务结束状态，返回码。
+当然我们还可以使用 <tt>--format</tt> 参数来指定到底要输出那些指标。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sacct --format=jobid,user,alloccpu,allocgres,state%15,exitcode
+       JobID      User  AllocCPUS    AllocGRES           State ExitCode
+------------ --------- ---------- ------------ --------------- --------
+104              liuhy          1        gpu:1       COMPLETED      0:0
+104.extern                      1        gpu:1       COMPLETED      0:0
+105              liuhy          1                    COMPLETED      0:0
+105.extern                      1                    COMPLETED      0:0
+108              liuhy         48                    COMPLETED      0:0
+108.extern                     48                    COMPLETED      0:0
+126              liuhy          4                    COMPLETED      0:0
+126.extern                      4                    COMPLETED      0:0
+140              liuhy         12                    COMPLETED      0:0
+140.batch                      12                    COMPLETED      0:0
+140.extern                     12                    COMPLETED      0:0
+141              liuhy         12               CANCELLED by 0      0:0
+141.batch                      12                    CANCELLED     0:15
+141.extern                     12                    COMPLETED      0:0
+142              liuhy          1                       FAILED      2:0
+142.extern                      1                    COMPLETED      0:0
+142.0                           1                       FAILED      2:0
+</pre></div></div>
+<p>在这里我们详细显示了作业 ID，用户，申请的 CPU，申请的 GPU，任务结束状态，
+返回码，其中我们比较感兴趣的是任务结束状态。在这里我们看到，JOBID 为 141 的
+作业的状态是 CANCELLED by 0，这里 0 表示系统的 root 用户。这条信息表示：我们
+的任务被集群的超级管理员强制取消了！这就需要询问管理员具体的原因了。另外，
+JOBID 为 142 作业的状态是 FAILED，它的含义是我们的作业脚本中有命令异常退出，
+这时候就需要检查我们的 SLURM 脚本的命令部分或者是查看运行环境了。</p>
+<h2>更新任务 <a name="update"></a></h2>
+<p>有时我们很早就提交了任务，但是在任务开始前却发现作业的属性写错了（例如提交错
+了分区，忘记申请 GPU 个数），取消了重新排队似乎很不划算。如果作业恰好没在运行
+我们是可以通过 <tt>scontrol</tt> 命令来修改作业的属性。</p>
+<p>使用以下命令可以修改 JOBID 任务的部分属性</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+scontrol update jobid=JOBID ...
+</pre></div></div>
+<p>由于可修改的属性非常多，我们可以借助 SLURM 自动补全功能来查看可修改的内容。
+这只需要我们在输入完 JOBID 后空一格并敲两下 <tt>&lt;TAB&gt;</tt> 键。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin ~]$ scontrol update jobid=938 &lt;TAB&gt;&lt;TAB&gt;
+account=&lt;account&gt;                      mintmpdisknode=&lt;megabytes&gt;             reqnodelist=&lt;nodes&gt;
+conn-type=&lt;type&gt;                       name&gt;                                  reqsockets=&lt;count&gt;
+contiguous=&lt;yes|no&gt;                    name=&lt;name&gt;                            reqthreads=&lt;count&gt;
+dependency=&lt;dependency_list&gt;           nice[=delta]                           requeue=&lt;0|1&gt;
+eligibletime=yyyy-mm-dd                nodelist=&lt;nodes&gt;                       reservationname=&lt;name&gt;
+excnodelist=&lt;nodes&gt;                    numcpus=&lt;min_count[-max_count]         rotate=&lt;yes|no&gt;
+features=&lt;features&gt;                    numnodes=&lt;min_count[-max_count]&gt;       shared=&lt;yes|no&gt;
+geometry=&lt;geo&gt;                         numtasks=&lt;count&gt;                       starttime=yyyy-mm-dd
+gres=&lt;list&gt;                            or                                     switches=&lt;count&gt;[@&lt;max-time-to-wait&gt;]
+licenses=&lt;name&gt;                        partition=&lt;name&gt;                       timelimit=[d-]h:m:s
+mincpusnode=&lt;count&gt;                    priority=&lt;number&gt;                      userid=&lt;UID
+minmemorycpu=&lt;megabytes&gt;               qos=&lt;name&gt;                             wckey=&lt;key&gt;
+minmemorynode=&lt;megabytes&gt;              reqcores=&lt;count&gt;
+</pre></div></div>
+<p>例如我要更改当前的分区到 gpu，并且申请 1 块卡，可以输入</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+scontrol update jobid=938 partition=gpu gres=gpu:1
+</pre></div></div>
+<p>注意变更的时候仍然不能超过系统规定的上限。变更成功后，作业的优先级可能需要重新
+来计算。</p>
+<p>当任务已经开始运行时，一般不可以再变更申请资源，分区等参数。特别地，如果发现
+自己低估了任务运行时间，<b>用户不能使用 scontrol 命令延长任务最大时间</b>。但是可以
+根据需求减少任务的最大时间。若确实有延长任务时间的急切需求请联系管理员。</p>
+<h2>使用作业数组(Job Array)<a name="array"></a></h2>
+<p>很多时候我们需要运行一组作业，这些作业所需的资源和内容非常相似，只是一些参数
+不相同。这个时候借助 Job Array 就可以很方便地批量提交这些作业。Job Array 中的
+每一个作业在调度时视为独立的作业，仍然受到队列以及服务器的资源限制。</p>
+<p><a name="array_range"></a>
+在 SLURM 脚本中使用 <tt>#SBATCH -a range</tt> 即可指定 Job Array 的数字范围，其中的
+<tt>range</tt> 参数需要是连续或不连续的整数。下面几种指定方式都是合法的。</p>
+<ul>
+<li><p><tt>#SBATCH -a 0-9</tt> 作业编号范围是 0 到 9，均含边界。</p>
+</li>
+<li><p><tt>#SBATCH -a 0,2,4</tt> 作业编号是 0,2,4。</p>
+</li>
+<li><p><tt>#SBATCH -a 0-5:2</tt> 同上，作业编号为 0,2,4，这个写法的意义相当于 MATLAB 中
+的 <tt>0:2:5</tt>，即间隔变成 2。</p>
+</li>
+<li><p><tt>#SBATCH -a 0-9,20,40</tt> 混合指定也是可以的。</p>
+</li>
+</ul>
+<p>在脚本运行中，SLURM 使用环境变量来表示作业数组，具体为</p>
+<ul>
+<li><p><tt>SLURM_ARRAY_JOB_ID</tt> 作业数组中第一个作业的 ID。</p>
+</li>
+<li><p><tt>SLURM_ARRAY_TASK_ID</tt> 该作业在数组中的索引。</p>
+</li>
+<li><p><tt>SLURM_ARRAY_TASK_COUNT</tt> 作业数组中作业总数。</p>
+</li>
+<li><p><tt>SLURM_ARRAY_TASK_MAX</tt> 作业数组中最后一个作业的索引。</p>
+</li>
+<li><p><tt>SLURM_ARRAY_TASK_MIN</tt> 作业数组中第一个作业的做引。</p>
+</li>
+</ul>
+<p>可用以上变量来区分不同组内的任务，以便于处理不同的输入参数。</p>
+<p>对于每个数组内的作业，它的默认输出文件的命名方式为 <tt>slurm-JOBID_TASKID.out</tt>。</p>
+<p>下面是一个很小的 SLURM 脚本例子，它使用 Job Array 来返回一些预设数组中的不同元素。
+在实际应用中，这些不同的字符串或许就是程序所需输入的文件名。当然你也可以使用一
+个脚本来包装你的程序，然后在这个脚本中获取这个环境变量。</p>
+<div class="codeblock">
+<div class="blocktitle">array.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J array</span>
+<span class="comment">#SBATCH -p cpu</span>
+<span class="comment">#SBATCH -N 1</span>
+<span class="comment">#SBATCH --cpus-per-task=1</span>
+<span class="comment">#SBATCH -t 5:00</span>
+<span class="comment">#SBATCH -a 0-2</span>
+
+input=(foo bar baz)
+<span class="builtin">echo</span> <span class="string">"This is job <span class="comment">#${SLURM_ARRAY_JOB_ID}, with parameter ${input[$SLURM_ARRAY_TASK_ID]}"</span></span>
+<span class="builtin">echo</span> <span class="string">"There are ${SLURM_ARRAY_TASK_COUNT} task(s) <span class="statement">in</span> the array."</span>
+<span class="builtin">echo</span> <span class="string">"  Max index is ${SLURM_ARRAY_TASK_MAX}"</span>
+<span class="builtin">echo</span> <span class="string">"  Min index is ${SLURM_ARRAY_TASK_MIN}"</span>
+sleep 5
+</pre></div></div>
+<p>提交以上脚本并使用 <tt>squeue</tt> 命令查看可以看到下面的结果：</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sbatch array.slurm
+Submitted batch job 50
+[liuhy@admin playground]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+              50_0       cpu    array    liuhy  R       0:01      1 comput1
+              50_1       cpu    array    liuhy  R       0:01      1 comput1
+              50_2       cpu    array    liuhy  R       0:01      1 comput1
+</pre></div></div>
+<p>作业 ID 是 50，而作业数组 ID 中的每个元素的命名方式为 <tt>JOBID_TASKID</tt>，非常
+容易分辨。</p>
+<p>以下是其中某个作业的输出：</p>
+<div class="codeblock">
+<div class="blocktitle">slurm-50_1.out</div>
+<div class="blockcontent"><pre>
+This is job #50, with parameter bar
+There are 3 task(s) in the array.
+  Max index is 2
+  Min index is 0
+</pre></div></div>
+<p>这正符合我们的预期。</p>
+<p>取消作业数组的部分或全部任务可以使用 <tt>scancel</tt> 命令。</p>
+<ul>
+<li><p><tt>scancel 50_[1-2]</tt>: 取消 50 号作业数组 TASK_ID 为 1 和 2 的作业。</p>
+</li>
+<li><p><tt>scancel 50_0 50_2</tt>: 取消 50 号作业数组 TASK_ID 为 0 和 2 的作业。</p>
+</li>
+<li><p><tt>scancel 50</tt>: 取消 50 号作业数组的全部作业。</p>
+</li>
+</ul>
+<h2>为什么我的作业没被运行<a name="reason"></a></h2>
+<p>用户提交作业后，是否运行取决于用户申请的资源情况和当前系统的情况。建议使用
+<tt>squeue</tt> 命令来查看所有已经提交和正在运行的作业。其中 NODELIST(REASON) 一栏
+包含非常有用的信息，在作业未运行时，它会显示未运行的原因；当作业在运行时，它
+会显示作业是在哪个节点运行的。</p>
+<p>下面的表格整理了常见作业未运行的原因，用户可根据此来调整自己的脚本。其中的<b>加粗
+部分</b>表示<b>异常原因</b>，用户需要<b>修改 SLURM 脚本</b>或<b>联系管理员</b>。</p>
+<table id="常见作业挂起原因">
+<tr class="r1"><td class="c1">原因代码 </td><td class="c2"> 详细说明 </td></tr>
+<tr class="r2"><td class="c1">BeginTime </td><td class="c2"> 未到用户所指定的任务开始时间 </td></tr>
+<tr class="r3"><td class="c1">Dependency </td><td class="c2"> 该作业所依赖的作业尚未完成 </td></tr>
+<tr class="r4"><td class="c1"><b>InvalidAccount</b> </td><td class="c2"> <b>用户的 SLURM 账号无效</b> </td></tr>
+<tr class="r5"><td class="c1"><b>InvalidQOS</b> </td><td class="c2"> <b>用户指定的 QoS 无效</b> </td></tr>
+<tr class="r6"><td class="c1"><b>ParitionTimeLimit</b> </td><td class="c2"> <b>用户申请的时间超过该分区时间上限</b> </td></tr>
+<tr class="r7"><td class="c1">QOSMaxCpuPerUserLimit</td><td class="c2"> 超过当前 QoS 用户最大 CPU 限制 </td></tr>
+<tr class="r8"><td class="c1">QOSMaxGRESPerUser </td><td class="c2"> 超过当前 QoS 用户最大 GRES(GPU) 限制 </td></tr>
+<tr class="r9"><td class="c1">Priority </td><td class="c2"> 存在一个或多个更高优先级的任务，该任务需要等待 </td></tr>
+<tr class="r10"><td class="c1">ReqNodeNotAvail </td><td class="c2"> 所申请的部分节点不可用 </td></tr>
+<tr class="r11"><td class="c1">Resources </td><td class="c2"> 暂无闲置资源，该任务需等待其他任务完成 
+</td></tr></table>
+<p>用户申请的资源超过当前 QoS 限制时，SLURM 会直接拒绝该任务。当申请的资源超过
+当前分区限制时，任务提交成功但是永远不会被运行。</p>
+<h2>计算节点访问权限控制<a name="security"></a></h2>
+<p>在一般情况下，用户不能通过 ssh 的方式直接连接任何一台计算节点。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ ssh comput1
+Access denied by pam_slurm_adopt: you have no active jobs on this node
+Connection to comput1 closed by remote host.
+Connection to comput1 closed.
+</pre></div></div>
+<p>如上所示，直接尝试登录 comput1 节点会被拒绝。原因是在当前节点没有和你有关
+的任务。</p>
+<p>如果自己在相应节点有一个任务，则用户<b>可以</b>通过 ssh 的方式进入该节点。并且只会
+获取和自己任务相关的那一部分资源。</p>
+<div class="codeblock">
+<div class="blocktitle">run.slurm</div>
+<div class="blockcontent"><pre>
+<span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH -J test</span>
+<span class="comment">#SBATCH -p gpu</span>
+<span class="comment">#SBATCH --cpus-per-task=4</span>
+<span class="comment">#SBATCH -N 1</span>
+<span class="comment">#SBATCH -t 3:00</span>
+<span class="comment">#SBATCH --gres=gpu:1</span>
+
+hostname
+sleep 600
+</pre></div></div>
+<p>此 SLURM 脚本中申请了 4 核心 CPU 和 1 块 GPU 卡，现在尝试登录目标节点 comput6</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@admin playground]$ sbatch run.slurm
+Submitted batch job 56
+[liuhy@admin playground]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                56       gpu     test    liuhy  R       0:00      1 comput6
+[liuhy@admin playground]$ ssh comput6
+Last login: Sat Jan 20 12:04:51 2018 from admin
+[liuhy@comput6 ~]$
+</pre></div></div>
+<p>可以看到已经成功进入了计算节点。使用 <tt>nvidia-smi</tt> 与 <tt>matlab</tt> 查看可用资源。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@comput6 ~]$ nvidia-smi
+Sat Jan 20 18:23:59 2018
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 384.111                Driver Version: 384.111                   |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  Tesla P100-PCIE...  Off  | 00000000:82:00.0 Off |                    0 |
+| N/A   35C    P0    30W / 250W |      0MiB / 16276MiB |     18%      Default |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+</pre></div></div>
+<p>只看到了一块 GPU 卡。</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+[liuhy@comput6 ~]$ matn
+&gt;&gt; maxNumCompThreads
+
+ans =
+
+     4
+</pre></div></div>
+<p>只看到了 4 个可用 CPU 核心。</p>
+<p>若超出任务最大时间，用户则会自动登出计算节点，所有未能按时结束的进程会自动终止。</p>
+<p>若在目标节点上有两个或以上任务，使用 <tt>ssh</tt> 登录时会取得最近一次提交的任务所相关
+的资源。</p>
+<h2>致 PBS 用户<a name="pbs"></a></h2>
+<p>考虑到多数用户已经习惯了 PBS 作业调度系统，这里整理了 PBS 和 SLURM 使用的
+对应关系。</p>
+<table id="PBS &amp; SLURM 对应">
+<tr class="r1"><td class="c1"><b>功能</b> </td><td class="c2"> <b>PBS</b> </td><td class="c3"> <b>SLURM</b> </td></tr>
+<tr class="r2"><td class="c1">任务名称 </td><td class="c2"> <tt>#PBS -N name</tt> </td><td class="c3"> <tt>#SBATCH -J name</tt> </td></tr>
+<tr class="r3"><td class="c1">指定队列/分区 </td><td class="c2"> <tt>#PBS -q cpu</tt> </td><td class="c3"> <tt>#SBATCH -p cpu</tt> </td></tr>
+<tr class="r4"><td class="c1">指定 QoS </td><td class="c2"> <tt>#PBS --qos=debug</tt>，需调度器支持 </td><td class="c3"> <tt>#SBATCH --qos=debug</tt> </td></tr>
+<tr class="r5"><td class="c1">最长运行时间 </td><td class="c2"> <tt>#PBS -l walltime=5:00</tt> </td><td class="c3"> <tt>#SBATCH -t 5:00</tt> </td></tr>
+<tr class="r6"><td class="c1">指定节点数量 </td><td class="c2"> <tt>#PBS -l nodes=1</tt> </td><td class="c3"> <tt>#SBATCH -N 1</tt>    </td></tr>
+<tr class="r7"><td class="c1">指定 CPU 核心 </td><td class="c2"> <tt>#PBS -l ppn=4</tt>  </td><td class="c3"> <tt>#SBATCH --cpus-per-task=4</tt> </td></tr>
+<tr class="r8"><td class="c1">指定 GPU 卡 </td><td class="c2"> 不支持 </td><td class="c3"> <tt>#SBATCH --gres=gpu:1</tt> </td></tr>
+<tr class="r9"><td class="c1">作业数组    </td><td class="c2"> <tt>#PBS -t 0-2</tt> </td><td class="c3"> <tt>#SBATCH -a 0-2</tt> </td></tr>
+<tr class="r10"><td class="c1">输出文件    </td><td class="c2"> <tt>#PBS -o test.out</tt> </td><td class="c3"> <tt>#SBATCH -o test.out</tt> </td></tr>
+<tr class="r11"><td class="c1">提交任务脚本 </td><td class="c2"> <tt>qsub run.pbs</tt>    </td><td class="c3"> <tt>sbatch run.slurm</tt> </td></tr>
+<tr class="r12"><td class="c1">查看任务状态 </td><td class="c2"> <tt>qstat</tt>           </td><td class="c3"> <tt>squeue</tt> </td></tr>
+<tr class="r13"><td class="c1">取消任务     </td><td class="c2"> <tt>qdel 1234</tt>       </td><td class="c3"> <tt>scancel 1234</tt> </td></tr>
+<tr class="r14"><td class="c1">交互式任务   </td><td class="c2"> <tt>qsub -I</tt>，自动切换 </td><td class="c3"> <tt>salloc</tt>，手动切换 </td></tr>
+<tr class="r15"><td class="c1">指定特定节点 </td><td class="c2"> <tt>qsub -l nodes=comput1</tt> </td><td class="c3"> <tt>#SBATCH --nodelist=comput1</tt>
+</td></tr></table>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/slurm.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:29 GMT -->
+</html>

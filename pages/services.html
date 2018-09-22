@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/services.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>其他功能</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html" class="current">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>其他功能</h1>
+</div>
+<p>除了计算功能外，服务器可为用户提供其他方便的服务。如果有需求请联系管理员获取
+账号。</p>
+<h2>GitLab <a name="gitlab"></a></h2>
+<p><a href="https://about.gitlab.com/">GitLab</a> 是一个开源项目，使用它可以在自己的服务器上搭
+建私人的 Git 平台。在功能上它和 GitHub 相似，用户可为每个 repo 独立设置访问
+权限。</p>
+<p>平台地址：<a href="https://admin-bicmr.cn/gitlab">https://admin-bicmr.cn/gitlab</a></p>
+<h3>开通账号</h3>
+<ul>
+<li><p>联系管理员，提供以 pku.edu.cn 结尾的邮箱，并自行设置用户名。</p>
+</li>
+<li><p>管理员确认后，会向申请所用的邮箱发送激活邮件，如果没收到检查一下垃圾邮件。</p>
+</li>
+<li><p>点击邮箱中的链接，设置初始密码，完成激活。</p>
+</li>
+</ul>
+<p><b>注：非组内人员谢绝打扰，这是私有平台。想要账号的去 GitLab 官网自己注册一个，不要
+骚扰管理员。如果注册失败需要检查你是否能够正常访问 Google。
+<a href="https://gitlab.com/users/sign_in">GitLab 官网地址</a></b></p>
+<h3>访问范围</h3>
+<ul>
+<li><p>GitLab 网页端只能在北大校内访问，在校外需要通过 VPN 连接。</p>
+</li>
+<li><p>如果仅使用 SSH 进行 repo 的各种操作，可在<b>免费地址</b>范围内访问。</p>
+</li>
+</ul>
+<h3>使用注意事项</h3>
+<ul>
+<li><p>Windows 用户建议使用 <a href="https://www.sourcetreeapp.com/">SourceTree</a> 客户端
+进行连接。</p>
+</li>
+<li><p>Linux 用户直接使用命令行的 git 即可。如果提示找不到命令可以使用 apt 或
+yum 进行安装。</p>
+</li>
+<li><p>不单独编写教程，推荐新用户看下<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">这个文档</a>熟悉一下 git，至于在 GitLab 网页端上的操作则十分简单。</p>
+</li>
+<li><p>如果忘记密码，在登录界面点击 Forgot your password，而后输入注册时使用的
+邮箱即可收到重置密码的邮件。</p>
+</li>
+</ul>
+<h2>Seafile <a name="seafile"></a></h2>
+<p><a href="https://www.seafile.com/home/">Seafile</a> 是一个开源的私人文件云平台，功能上与 Dropbox 相似。这个平台可以基本上
+解决组内成员共享文件的问题。</p>
+<p>平台地址：<a href="https://file.admin-bicmr.cn/">https://file.admin-bicmr.cn</a></p>
+<h3>主要功能</h3>
+<ul>
+<li><p>文件存储。功能类似于个人云盘，用户可以将本地文件存储到组内 Seafile 上备用。</p>
+</li>
+<li><p>文件同步。使用客户端后，资料库将会在本地和云端<b>自动同步</b>，保留较新版本。
+用户可设置要同步哪些资料库。</p>
+</li>
+<li><p>文件共享。用户可以和平台其他用户共享资料库或文件夹，被共享者拥有只读权限
+或读写权限。</p>
+</li>
+<li><p>下载/上传链接。用户可生成下载或上传链接。两种链接均可被任何人访问（无论
+他们是否是平台用户）。使用上传链接时上传者不能查看别人上传的文件。</p>
+</li>
+<li><p>历史版本。所有文件的历史版本都会被平台记录，方便回滚。</p>
+</li>
+</ul>
+<h3>开通账号</h3>
+<ul>
+<li><p>联系管理员，提供以 pku.edu.cn 结尾的邮箱。</p>
+</li>
+<li><p>管理员确认后，会为你设置随机的初始密码。</p>
+</li>
+<li><p>打开网页端，使用邮箱+密码登录，修改密码。</p>
+</li>
+</ul>
+<h3>访问范围</h3>
+<ul>
+<li><p>Seafile 平台（包括生成的链接）只能通过校内访问，校外需要使用 VPN。</p>
+</li>
+</ul>
+<h3>使用注意事项</h3>
+<ul>
+<li><p>Seafile 需要配合客户端使用。一般只需要下载一个<b>同步客户端</b>。<a href="https://www.seafile.com/download/">下载地址</a></p>
+</li>
+<li><p>在配置客户端的时候，服务器地址填写 <tt>https://file.admin-bicmr.cn</tt>，不要漏了
+前面的 https。</p>
+</li>
+<li><p>目前暂无配额，慎用下载链接和上传链接。无特殊情况不得向组外人员以链接方式
+提供资源和服务。</p>
+</li>
+<li><p>如果忘记密码直接让管理员进行重置。Web 端的重置密码功能没开。</p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:39 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/services.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 02:03:33 GMT -->
+</html>

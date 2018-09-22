@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 01:33:31 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="../stylesheets/jemdoc.css" type="text/css" />
+<title>工作站使用指南</title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">工作站使用指南</div>
+<div class="menu-item"><a href="index.html" class="current">首页</a></div>
+<div class="menu-item"><a href="quickstart.html">快速入门</a></div>
+<div class="menu-item"><a href="login.html">登录到工作站</a></div>
+<div class="menu-item"><a href="env.html">配置运行环境</a></div>
+<div class="menu-item"><a href="interactive.html">提交交互式任务</a></div>
+<div class="menu-item"><a href="batch.html">提交批处理任务</a></div>
+<div class="menu-item"><a href="examples.html">一些例子</a></div>
+<div class="menu-item"><a href="slurm.html">slurm&nbsp;参考</a></div>
+<div class="menu-item"><a href="faq.html">常见问题</a></div>
+<div class="menu-item"><a href="softwares.html">集群软件</a></div>
+<div class="menu-item"><a href="services.html">其他功能</a></div>
+<div class="menu-category">实用工具与技巧</div>
+<div class="menu-item"><a href="gui.html">使用图形界面</a></div>
+<div class="menu-item"><a href="conda.html">conda&amp;pip</a></div>
+<div class="menu-item"><a href="filetransfer.html">传输文件</a></div>
+<div class="menu-item"><a href="cheatsheet.html">CheatSheet</a></div>
+<div class="menu-category">编程技巧</div>
+<div class="menu-item"><a href="coding.html">首页</a></div>
+<div class="menu-item"><a href="coding.html#format">C/C++&nbsp;代码美化</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>工作站使用指南</h1>
+</div>
+<p>欢迎使用北京大学国际数学中心微型工作站。此工作站为部分组内的本科生和研究生提供计算服务。
+在使用工作站之前，如果你没有使用集群进行计算的经验，那么我们强烈推荐你花费一点时间
+来阅读此说明书上的内容。这些内容也可不必在很短时间全部看完，不过<a href="quickstart.html">快速入门</a>的
+部分还是要仔细看一下，这是工作站指南的一个简化版，非常适合无基础的用户学习。</p>
+<p><b>我们选择工作站进行计算的理由是</b></p>
+<ul>
+<li><p>它可以将我们的个人电脑从繁重的任务中解放出来。利用工作站，你可以运行更大规模的程序。
+在此期间你可以用你的个人电脑做其他的事情，甚至关机，都不会影响工作站的进度。</p>
+</li>
+<li><p>它在并行计算方面有极大的优势。工作站服务器的处理器特点是核心数量很多，虽然每个核心
+的运算能力不算最强，但是协同工作时会提供很高的加速比。</p>
+</li>
+<li><p>它可以加深你对软件运行环境的理解。从而会让你产生编写可移植性更强的程序的意识。</p>
+</li>
+</ul>
+<h2>工作站概况</h2>
+<p>计算配置：</p>
+<p><table border="1">
+<tr>
+<th align=center>节点类型</th>
+<th align=center>节点数量</th>
+<th align=center>CPU 详情</th>
+<th align=center>超线程</th>
+<th aligh=center>总 CPU 核心</th>
+<th align=center>内存</th>
+<th align=center>内存/核心</th>
+<th align=center>备注</th>
+</tr>
+<tr>
+<td>管理节点</td>
+<td>1</td>
+<td>2 x E5-2640 v3, 2.60 GHz, 8 cores</td>
+<td>是</td>
+<td>32</td>
+<td>64 GB</td>
+<td>2 GB/core</td>
+<td>单用户限制内存 4 GB</td>
+</tr>
+<tr>
+<td>CPU 节点</td>
+<td>4</td>
+<td>2 x E5-2680 v3, 2.50 GHz, 12 cores</td>
+<td>是</td>
+<td>48</td>
+<td>128 GB</td>
+<td>2.67 GB/core</td>
+<td>---</td>
+</tr>
+<tr>
+<td>GPU 节点</td>
+<td>1</td>
+<td>2 x E5-2680 v4, 2.40 GHz, 14 cores</td>
+<td>是</td>
+<td>56</td>
+<td>128 GB</td>
+<td>2.28 GB/core</td>
+<td>NVIDIA Tesla P100 x 2, CUDA 9.0</td>
+</tr>
+</table></p>
+<p>其他配置：</p>
+<p><table border="1">
+<tr>
+<th align=center>名称</th>
+<th align=center>详细说明</th>
+</tr>
+<tr>
+<td>存储</td>
+<td>30 TB 共享存储空间，暂无磁盘配额。</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>1 Gbps 管理网络，10 Gbps 计算网络。对校内 1 Gbps。</td>
+</tr>
+<tr>
+<td>调度系统</td>
+<td>SLURM 17.11.2</td>
+</tr>
+</table></p>
+<h2>快速入门</h2>
+<p>如果你想快速学习如何使用我们的工作站，请阅读这个部分。<a href="quickstart.html">了解更多&gt;&gt;</a></p>
+<h2>配置运行环境</h2>
+<p>我们的工作站服务的对象涉及的领域众多。有些人习惯用 C/C++ 来编写程序，有些人习惯用 MATLAB。
+在众多 python 用户中，有些用户习惯 python2，另一些用户习惯 python3。在运行你的程序之前，
+有必要选择工作站运行的环境，在这里我们提供了 environment modules 这一强大的软件模块
+管理工具。<a href="env.html">了解更多&gt;&gt;</a></p>
+<h2>提交交互式任务</h2>
+<p>交互式任务允许你在服务器上对运行的程序进行实时的监控和调试。这就好像你在一个性能更好
+的个人机器上进行实时操作一样。<a href="interactive.html">了解更多&gt;&gt;</a></p>
+<h2>提交批处理任务</h2>
+<p>批处理任务是工作站最常见的任务类型。这种任务不需要用户实时看管，因此在用户离线时也可以
+正常执行。由于是全自动的，因此用户必须手动保存计算的结果，否则会发生计算完成了但是不知
+到何处找结果的情形。另外，有时用户需要在不同的参数或输入下运行同一个程序，这种情况下
+批量生成任务是非常好的选择。<a href="batch.html">了解更多&gt;&gt;</a></p>
+<h2>一些例子</h2>
+<p>这里收录了一些常用运行程序的例子，不想阅读冗长说明书的用户可以直接参考里面的
+例子编写 SLURM 脚本。特别地，MPI 用户需要仔细阅读“运行 MPI”任务一节。<a href="examples.html">了解更多&gt;&gt;</a></p>
+<h2>SLURM 参考</h2>
+<p>集群使用功能强大的 SLURM 调度系统。了解集群配置并且正确使用调度系统对将来的
+计算非常有帮助。<a href="slurm.html">了解更多&gt;&gt;</a></p>
+<h2>CheatSheet</h2>
+<p>管理员同学摸爬滚打总结出的 CheatSheet，不定期更新。一般人我不告诉他。
+<a href="cheatsheet.html">了解更多&gt;&gt;</a></p>
+<h2>常见问题</h2>
+<p>在使用服务器的时候你是否也有一些疑问？这些问题可能已经被问过很多次，所以不妨在这里
+寻找一下你的答案。<a href="faq.html">了解更多&gt;&gt;</a></p>
+<h2>集群软件</h2>
+<p>为了方便同学运行程序，集群中安装了许多类型的软件。这些软件都在管理员维护的范围内，如果
+有新的需求，也可联系我们来安装所需的软件。<a href="softwares.html">了解更多&gt;&gt;</a></p>
+<h2>其他服务</h2>
+<p>除了计算服务外，工作站还对外开设其他服务。这些服务由于在局域网内架设，在校内访问速度
+较快。</p>
+<ul>
+<li><p><a href="services.html#gitlab">Gitlab - 私有 Git 平台</a></p>
+</li>
+<li><p><a href="services.html#seafile">Seafile - 私有文件云平台</a></p>
+</li>
+</ul>
+<h2>联系管理员</h2>
+<p>如果有疑问，请联系工作站管理员。</p>
+<ul>
+<li><p>刘浩洋 liuhaoyang@pku.edu.cn</p>
+</li>
+</ul>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-07-01 10:36:38 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/pages/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Sep 2018 01:33:45 GMT -->
+</html>
