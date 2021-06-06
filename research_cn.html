@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/research.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Sep 2018 23:53:20 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="jemdoc.css" type="text/css" />
+<title>研究课题 </title>
+</head>
+<body>
+    <table summary="Table for page layout." id="tlayout">
+      <tr valign="top">
+        <td id="layout-menu">
+          <div class="menu-category">孙涛</div>
+          <div class="menu-item"><a href="index.html">主页</a></div>
+          <div class="menu-category">研究</div>
+          <div class="menu-item"><a href="research.html">研究课题</a></div>
+          <div class="menu-item"><a href="pub.html" class="current">发表文章</a></div>
+          <div class="menu-item"><a href="talks.html">近期&nbsp;报告</a></div>
+          <div class="menu-item"><a href="softwares.html">软件</a></div>
+<!-- <div class="menu-item"><a href="seminar.html">Seminars</a></div> -->
+<!-- <div class="menu-item"><a href="group.html">Group</a></div>
+<div class="menu-category">Teaching</div>
+<div class="menu-item"><a href="opt-2018-fall.html">Convex&nbsp;<br /> Optimization&nbsp;<br /> (2018&nbsp;Fall)</a></div>
+<div class="menu-item"><a href="bigdata2018.html">Algorithms&nbsp;for&nbsp;<br /> Big&nbsp;Data&nbsp;<br /> Analysis&nbsp;<br />(2018&nbsp;Spring)</a></div> -->
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>研究课题 </h1>
+</div>
+
+<p><b> 贝叶斯推导在动态成像的应用 </b><br /></p>
+Perfusion CT imaging is commonly used for the rapid assessment of patients presenting with symptoms of acute stroke.  
+Maps of perfusion parameters such as cerebral blood volume (CBV), cerebral blood flow (CBF), and mean transit time (MTT) 
+derived from the scan data provide crucial information for stroke diagnosis and treatment decisions. Most vendors implement 
+singular value decomposition (SVD)-based methods on their scanners to calculate these parameters. However, SVD-based method 
+is known to have issues of improperly handling the imperfect scan. For example, increasing the acquisition interval or decreasing 
+the scan duration may introduce a bias in the estimated perfusion parameters. In this work, we propose a Bayesian inference algorithm,
+which can tolerate the imperfect scan conditions better than conventional method and is able to derive the uncertainty of a given 
+perfusion parameter. We apply the variational technique to the inference problem, which becomes an expectation-maximization problem.
+The probability distribution (with Gaussian mean and variance) of each estimated parameter can be obtained.The proposed method can obtain much less bias in estimation than the 
+conventional method, and additionally providing the degree of the uncertainty in measurement.<a href="https://www.ncbi.nlm.nih.gov/pubmed/31508827">(link to pubmed)</a> <br /><br />
+
+<p><b>心脏PET的运动校正</b><br /></p>
+Motion of the myocardium deteriorates the quality and quantitative accuracy of cardiac PET images.
+We propose and evaluate a novel method to detect, estimate, and correct body motion in cardiac PET.
+Our method consists of three key components: motion detection, motion estimation, and motion-compensated
+image reconstruction.Visually, the motion-corrected (MC) PET images obtained by the proposed method have
+better quality and fewer motion artifacts than the images reconstructed without motion correction (NMC). 
+Quantitative analysis indicates that MC yields higher myocardium to blood pool concentration ratios. MC 
+also yields sharper myocardium than NMC.<a href="https://www.ncbi.nlm.nih.gov/pubmed/31508827">(link to pubmed)</a> <br />
+<img src="images/Picture1.png" alt="500px" width="550px" align="middle" />&nbsp<br />
+<br />
+We also present a method for MR-based cardiac and respiratory motion correction of cardiac PET data and 
+evaluate its impact on estimation of activity and kinetic parameters in human subjects. The results 
+shows that MR-based motion correction of cardiac PET results in improved image quality that can 
+benefit both static and dynamic studies.<a href="https://www.ncbi.nlm.nih.gov/pubmed/31394518">(link to pubmed)</a><br />
+<img src="images/Picture2.png" alt="500px" width="550px" align="middle" />&nbsp<br /><br />
+
+<p><b>头部CT的运动校正</b><br /></p>
+Although current computed tomography (CT) systems can scan the head in a very short time, patient motion sometimes
+still induces artifacts. If motion occurs, one has to repeat the scan; to avoid motion, sedation or anesthesia is 
+sometimes applied. The authors propose a method to iteratively estimate and compensate this motion during the reconstruction.
+In the patient studies, most of the motion blurring in the reconstructed images disappeared after the compensation.
+Since only measured raw data are needed for the motion estimation and compensation, the proposed method can be applied
+retrospectively to clinical helical CT scans affected by motion. Recently this method has been extened to be applied to dental and maxillofacial 
+CBCT scan as well, which demonstrated promising results. <a href="https://www.ncbi.nlm.nih.gov/pubmed?linkname=pubmed_pubmed_reviews&from_uid=27782729">
+  (link to pubmed)</a><br /><a href="https://iopscience.iop.org/article/10.1088/1361-6560/abfa38">
+  (link to pubmed)</a><br />
+<img src="images/Picture3.png" alt="300px" width="350px" align="middle"/> <img src="images/Picture31.png" alt="300px" width="350px" align="middle"/> &nbsp<br /><br />
+
+<p><b>PET/CT衰减矫正</b><br /></p>
+The temporal mismatch between PET and standard helical CT (HCT) causes substantial respiratory artifacts in PET reconstructed 
+images when using HCT as the attenuation map. We developed an interpolated average CT (IACT) method for attenuation correction 
+(AC) and demonstrated its merits in simulations. In this study we aim to apply IACT in patients with thoracic lesions using an 
+active breathing controller (ABC). IACT-ABC reduces respiratory artifacts, PET/CT misregistration and enhances lesion quantitation. 
+This technique is a robust and low dose AC protocol for clinical oncology application especially in the thoracic region.
+<a href="https://www.ncbi.nlm.nih.gov/pubmed/24089928">(link to pubmed)</a><br />
+<img src="images/Picture4.png" alt="600px" width="650px" align="middle" />&nbsp<br />
+
+
+<p><b>动态PET成像新技术 </b><br /></p>
+The overall goal of this project is by developing a series of novel imaging
+techniques, making the breakthrough of dynamic PET imaging, thus of the quantitative
+imaging. We plan to realize this by: (1) propose and optimize novel scan protocols; (2)
+develop methods for image quality improvement and computational models for parametric
+analysis; (3) investigate several clinical applications for which dynamic PET imaging
+can offer significant values. This project will eventually boost the application of
+dynamic PET imaging in clinics.
+</a> <br /><br />
+
+
+<h2>研究兴趣</h2>
+<p><li>断层成像图像质量控制与提高 <br /></li></p>
+<p><li>PET/CT 和 PET/MR 定量 <br /></li></p>
+<p><li>PET分子探针药物动力学和代谢动力学 <br /></li></p>
+<p><li>新型CT技术 <br /></li></p>
+
+
+<div id="footer">
+<div id="footer-text">
+<!-- Page generated 2018-09-06 21:20:59 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>. -->
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/research.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Sep 2018 23:53:20 GMT -->
+</html>
