@@ -209,6 +209,10 @@ li ul, li ol {
 	margin-top: -0.3em;
 }
 
+ul li {
+    padding: 5px 0px;
+}
+
 ol {
 	list-style-position: outside;
 	list-style-type: decimal;
