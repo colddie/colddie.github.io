@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/research.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Sep 2018 23:53:20 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="jemdoc.css" type="text/css" />
+<title>Selected Research Topics </title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">Tao Sun</div>
+<div class="menu-item"><a href="index.html">Home</a></div>
+<div class="menu-category">Research</div>
+<div class="menu-item"><a href="research.html" class="current">Research</a></div>
+<div class="menu-item"><a href="pub.html">Publications</a></div>
+<div class="menu-item"><a href="talks.html">Recent&nbsp;Talks</a></div>
+<div class="menu-item"><a href="softwares.html">Softwares</a></div>
+<div class="menu-item"><a href="index_cn.html">中文版</a></div> 
+<!-- <div class="menu-item"><a href="seminar.html">Seminars</a></div> -->
+<!-- <div class="menu-item"><a href="group.html">Group</a></div>
+<div class="menu-category">Teaching</div>
+<div class="menu-item"><a href="opt-2018-fall.html">Convex&nbsp;<br /> Optimization&nbsp;<br /> (2018&nbsp;Fall)</a></div>
+<div class="menu-item"><a href="bigdata2018.html">Algorithms&nbsp;for&nbsp;<br /> Big&nbsp;Data&nbsp;<br /> Analysis&nbsp;<br />(2018&nbsp;Spring)</a></div> -->
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>Selected Research Topics </h1>
+</div>
+
+<p><b> Total-body PET imaging techniques </b><br /></p>
+The overall goal is to faciliatet the total-body PET imaging by developing a series of novel imaging techniques. Working closely with our clinical collaborators, the research topics include but not limited to: 
+(1) Develop methods for total-body image quality improvement; 
+(2) Propose and optimize simpified scan protocols, and their associated parametric analysis; 
+(3) Investigate novel data analysis approach for whole-body multi-parametric images;
+(4) Find translational applications for which total-body PET imaging can offer significant values over conventional way. </a> <br />
+<img src="images/Picture00.png" alt="300px" width="250px" align="middle" />&nbsp<br />
+ <br />
+
+<p><b> Bayesian Inference for dynamic imaging </b><br /></p>
+Perfusion CT imaging is commonly used for the rapid assessment of patients presenting with symptoms of acute stroke.  
+Maps of perfusion parameters such as cerebral blood volume (CBV), cerebral blood flow (CBF), and mean transit time (MTT) 
+derived from the scan data provide crucial information for stroke diagnosis and treatment decisions. Most vendors implement 
+singular value decomposition (SVD)-based methods on their scanners to calculate these parameters. However, SVD-based method 
+is known to have issues of improperly handling the imperfect scan. For example, increasing the acquisition interval or decreasing 
+the scan duration may introduce a bias in the estimated perfusion parameters. In this work, we propose a Bayesian inference algorithm,
+which can tolerate the imperfect scan conditions better than conventional method and is able to derive the uncertainty of a given 
+perfusion parameter. We apply the variational technique to the inference problem, which becomes an expectation-maximization problem.
+The probability distribution (with Gaussian mean and variance) of each estimated parameter can be obtained.The proposed method can obtain much less bias in estimation than the 
+conventional method, and additionally providing the degree of the uncertainty in measurement.<a href="">(link to pubmed)</a> <br />
+<img src="images/Picture0.png" alt="500px" width="550px" align="middle" />&nbsp<br />
+<br />
+
+<p><b>Motion correction for Cardiac PET</b><br /></p>
+Motion of the myocardium deteriorates the quality and quantitative accuracy of cardiac PET images.
+We propose and evaluate a novel method to detect, estimate, and correct body motion in cardiac PET.
+Our method consists of three key components: motion detection, motion estimation, and motion-compensated
+image reconstruction.Visually, the motion-corrected (MC) PET images obtained by the proposed method have
+better quality and fewer motion artifacts than the images reconstructed without motion correction (NMC). 
+Quantitative analysis indicates that MC yields higher myocardium to blood pool concentration ratios. MC 
+also yields sharper myocardium than NMC.<a href="https://www.ncbi.nlm.nih.gov/pubmed/31508827">(link to pubmed)</a> <br />
+<img src="images/Picture1.png" alt="500px" width="550px" align="middle" />&nbsp<br />
+<br />
+We also present a method for MR-based cardiac and respiratory motion correction of cardiac PET data and 
+evaluate its impact on estimation of activity and kinetic parameters in human subjects. The results 
+shows that MR-based motion correction of cardiac PET results in improved image quality that can 
+benefit both static and dynamic studies.<a href="https://www.ncbi.nlm.nih.gov/pubmed/31394518">(link to pubmed)</a><br />
+<img src="images/Picture2.png" alt="500px" width="550px" align="middle" />&nbsp<br /><br />
+
+<p><b>Motion correction for head CT</b><br /></p>
+Although current computed tomography (CT) systems can scan the head in a very short time, patient motion sometimes
+still induces artifacts. If motion occurs, one has to repeat the scan; to avoid motion, sedation or anesthesia is 
+sometimes applied. The authors propose a method to iteratively estimate and compensate this motion during the reconstruction.
+In the patient studies, most of the motion blurring in the reconstructed images disappeared after the compensation.
+Since only measured raw data are needed for the motion estimation and compensation, the proposed method can be applied
+retrospectively to clinical helical CT scans affected by motion. Recently this method has been extened to be applied to dental and maxillofacial 
+CBCT scan as well, which demonstrated promising results. <a href="https://www.ncbi.nlm.nih.gov/pubmed?linkname=pubmed_pubmed_reviews&from_uid=27782729">
+  (link to pubmed)</a><br /><a href="https://iopscience.iop.org/article/10.1088/1361-6560/abfa38">
+  (link to pubmed)</a><br />
+<img src="images/Picture3.png" alt="300px" width="350px" align="middle"/> <img src="images/Picture31.png" alt="300px" width="350px" align="middle"/> &nbsp<br /><br />
+
+<p><b>Attenuation correction for PET/CT</b><br /></p>
+The temporal mismatch between PET and standard helical CT (HCT) causes substantial respiratory artifacts in PET reconstructed 
+images when using HCT as the attenuation map. We developed an interpolated average CT (IACT) method for attenuation correction 
+(AC) and demonstrated its merits in simulations. In this study we aim to apply IACT in patients with thoracic lesions using an 
+active breathing controller (ABC). IACT-ABC reduces respiratory artifacts, PET/CT misregistration and enhances lesion quantitation. 
+This technique is a robust and low dose AC protocol for clinical oncology application especially in the thoracic region.
+<a href="https://www.ncbi.nlm.nih.gov/pubmed/24089928">(link to pubmed)</a><br />
+<img src="images/Picture4.png" alt="600px" width="650px" align="middle" />&nbsp<br />
+
+
+<br />
+
+
+
+
+<div id="footer">
+<div id="footer-text">
+<!-- Page generated 2018-09-06 21:20:59 CST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>. -->
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+
+<!-- Mirrored from bicmr.pku.edu.cn/~wenzw/research.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 13 Sep 2018 23:53:20 GMT -->
+</html>
