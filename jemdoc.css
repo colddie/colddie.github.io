@@ -1,5 +1,26 @@
 /* Default css file for jemdoc. */
+@media (min-width: 80em){
+.main {
+    max-width: 1280px;
+}}
 
+.main {
+    max-width: 925px;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+    margin-top: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    animation: intro 0.3s both;
+    animation-delay: 0.35s;
+}
+.flex {display:flex;margin-top: 0;}
+.log span{
+	font-size: 165%;
+    font-weight: bold;
+	line-height: 330%;
+}
 table#tlayout {
     border: none;
     border-collapse: separate;
@@ -11,6 +32,22 @@ body {
 	font-family: Georgia, serif;
 	padding-bottom: 8px;
 	margin: 0;
+	line-height: 1.5;
+	font-family: -apple-system,".SFNSText-Regular","San Francisco","Roboto","Segoe UI","Helvetica Neue","Lucida Grande",Arial,sans-serif;
+	color: var(--global-text-color);
+}
+
+header {
+	border-bottom: 1px solid #f9f6f6;
+}
+.dh ul {
+    text-align: center;
+    display: flex;
+}
+
+.dh li {
+    list-style-type: none;
+    padding: 15px;
 }
 
 #layout-menu {
@@ -20,8 +57,6 @@ body {
 	padding-left: 8px;
 	padding-right: 8px;
 	font-size: 1.0em;
-	width: auto;
-	white-space: nowrap;
     text-align: left;
     vertical-align: top;
 }
@@ -37,10 +72,12 @@ body {
 	padding-right: 1.0em;
     border: none;
     background: white;
-    text-align: left;
+    text-align: justify;
     vertical-align: top;
 }
-
+#layout-content img {
+    margin: 10px;
+}
 #layout-menu a {
 	line-height: 1.5em;
 	margin-left: 0.5em;
@@ -76,12 +113,20 @@ a:hover {
 	text-decoration: none;
 }
 
-div.menu-category {
-	border-bottom: 1px solid gray;
+.sidebar {
 	margin-top: 0.8em;
 	padding-top: 0.2em;
 	padding-bottom: 0.1em;
-	font-weight: bold;
+	margin-right: 30px;
+	text-align: center;
+}
+
+
+
+.k {
+	border-radius: 150px;
+	padding: 5px;
+    border: 1px solid #ecebeb;
 }
 
 div.menu-item {
@@ -92,7 +137,7 @@ div.menu-item {
 div#toptitle {
 	padding-bottom: 0.2em;
 	margin-bottom: 1.5em;
-	border-bottom: 3px double gray;
+    border-bottom: 1px solid #efefef;
 }
 
 /* Reduce space if we begin the page with a title. */
@@ -116,14 +161,13 @@ strong {
 }
 
 
-h1, h2, h3 {
+ h2, h3 {
 	color: #527bbd;
 	margin-top: 0.7em;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
 	line-height: 1.0;
 	padding-top: 0.5em;
-	border-bottom: 1px solid #aaaaaa;
 }
 
 h1 {
@@ -145,23 +189,29 @@ h3 {
 }
 
 p {
-	margin-top: 0.0em;
-	margin-bottom: 0.8em;
-	padding: 0;
-	line-height: 1.3;
+	text-align: justify;	
 }
 
 pre {
 	padding: 0;
 	margin: 0;
 }
+.lx img {width:15px;height:15px;padding-right: 5px;}
+.lx span {
+    line-height: 28px;
+    font-size: 14px;
+}
+.ali {align-items: center;}
 
 div#footer {
 	font-size: small;
 	border-top: 1px solid #c0c0c0;
-	padding-top: 0.1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
 	margin-top: 4.0em;
 	color: #c0c0c0;
+	background: #f2f3f3;
+	text-align: center;
 }
 
 div#footer a {
@@ -169,11 +219,9 @@ div#footer a {
 }
 
 div#footer-text {
-	float: left;
-	padding-bottom: 8px;
 }
 
-ul, ol, dl {
+ol, dl {
 	margin-top: 0.2em;
 	padding-top: 0;
 	margin-bottom: 0.8em;
